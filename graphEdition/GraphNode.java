@@ -11,7 +11,7 @@ package graphEdition;
  */
 public interface GraphNode<E> {
     
-    int getNumber();
+    int getIndexOfTop();
     
     E getValue();
 }

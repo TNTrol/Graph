@@ -6,7 +6,7 @@
 package graphEdition;
 
 public class TopGraph<T> {
-    private int x,y;
+    private int x = 0, y = 0;
     private T value;
     
     public TopGraph(){        
@@ -15,6 +15,11 @@ public class TopGraph<T> {
     public TopGraph(int x, int y){
         this.x=x;
         this.y=y;       
+    }
+
+    public TopGraph(T value)
+    {
+        this.value = value;
     }
 
     public int getX() {
@@ -39,6 +44,12 @@ public class TopGraph<T> {
 
     public void setValue(T value) {
         this.value = value;
+    }
+
+    public void setCoordinates(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
     }
    
 }

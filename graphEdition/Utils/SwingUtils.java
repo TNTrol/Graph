@@ -1,4 +1,4 @@
-package graphEdition;
+package graphEdition.Utils;
 
 import java.awt.Component;
 import java.awt.Dimension;
