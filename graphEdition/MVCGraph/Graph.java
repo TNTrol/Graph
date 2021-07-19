@@ -3,15 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package graphEdition;
+package graphEdition.MVCGraph;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import graphEdition.AuxiliarySets.GraphNode;
+import graphEdition.AuxiliarySets.TopGraph;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import javax.swing.JPanel;
 
 /**
  * @param <T>
@@ -71,6 +70,11 @@ public abstract class Graph<T, E> {
     TopGraph<T> getTopGraphByIndex(int top)
     {
         return tops.get(top);
+    }
+
+    public void clear()
+    {
+        tops.clear();
     }
 
     //public void Value(T t);

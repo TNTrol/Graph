@@ -1,9 +1,10 @@
-package graphEdition;
+package graphEdition.GraphsIml;
 
-import graphEdition.Nodes.NodeList;
+import graphEdition.AuxiliarySets.GraphNode;
+import graphEdition.MVCGraph.Graph;
+import graphEdition.AuxiliarySets.NodeList;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,8 +16,9 @@ public class ListGraph<T, E> extends Graph<T, E>
     public E[][] getMatrixValue(Class<E> clazz)
     {
         if (clazz != null) {
-            E[][] arr = (E[][]) Array.newInstance(clazz, tops.size(), tops.size());
-            for (int i = 0; i < tops.size(); i++) {
+            int size = countOfTop();
+            E[][] arr = (E[][]) Array.newInstance(clazz, size, size);
+            for (int i = 0; i < size; i++) {
                 if (edge[i] != null) {
                     for (NodeList node : edge[i]) {
                         arr[i][node.top] = (E) node.getValue();
@@ -32,8 +34,9 @@ public class ListGraph<T, E> extends Graph<T, E>
     @Override
     public boolean[][] getMatrixBool()
     {
-        boolean[][] arr = new boolean[tops.size()][tops.size()];
-        for (int i = 0; i < tops.size(); i++) {
+        int size = countOfTop();
+        boolean[][] arr = new boolean[size][size];
+        for (int i = 0; i < size; i++) {
             if (edge[i] != null) {
                 for (NodeList node : edge[i]) {
                     arr[i][node.top] = true;
@@ -56,9 +59,9 @@ public class ListGraph<T, E> extends Graph<T, E>
         if (arr == null) {
             return;
         }
-        tops = new ArrayList<>();
+        clear();
         for (int i = 0; i < arr.length; i++) {
-                tops.add(new TopGraph<>());
+                super.addTop(null);
         }
         edge = new LinkedList[arr.length];
         for (int i = 0; i < arr.length; i++) {
@@ -167,24 +170,26 @@ public class ListGraph<T, E> extends Graph<T, E>
     @Override
     public void addTop(T t)
     {
-        tops.add(new TopGraph(t));
-        if (tops.size() > edge.length) {
+        super.addTop(t);
+        int size = countOfTop();
+        if (size > edge.length) {
             List<NodeList<E>>[] arr = new LinkedList[edge.length * 2];
             for (int i = 0; i < edge.length; i++) {
                 arr[i] = edge[i];
             }
             edge = arr;
         }
-        edge[tops.size() - 1] = new LinkedList();
+        edge[size - 1] = new LinkedList();
     }
 
     @Override
     public boolean removeTop(int top)
     {
-        for (int i = top; i < tops.size(); i++) {
-            edge[i] = i != tops.size() - 1 ? edge[i + 1] : new LinkedList();
+        int size = countOfTop();
+        for (int i = top; i < size; i++) {
+            edge[i] = i != size - 1 ? edge[i + 1] : new LinkedList();
         }
-        for (int i = 0; i < tops.size(); i++) {
+        for (int i = 0; i < size; i++) {
             if (edge[i] != null) {
                 for (Iterator<NodeList<E>> it = edge[i].iterator(); it.hasNext();) {
                     if (it.next().top == top) {
@@ -202,7 +207,7 @@ public class ListGraph<T, E> extends Graph<T, E>
             }
         }
 
-        tops.remove(top);
+        super.removeTop(top);
         return true;
     }
 }

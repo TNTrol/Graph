@@ -1,13 +1,13 @@
-package graphEdition;
+package graphEdition.GraphsIml;
 
-import graphEdition.Nodes.NodeArray;
+import graphEdition.AuxiliarySets.NodeArray;
 
 public class ArrayDirectedGraph<T, E> extends ArrayGraph<T,E>
 {
     @Override
     public boolean removeEdge(int i, int j)
     {
-        if(i >= tops.size() || j >= tops.size())
+        if(i >= countOfTop() || j >= countOfTop())
             throw new IndexOutOfBoundsException();
         edges[i][j] = null;
         return true;

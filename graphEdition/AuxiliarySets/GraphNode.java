@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package graphEdition;
+package graphEdition.AuxiliarySets;
 
 /**
  *
@@ -12,6 +12,6 @@ package graphEdition;
 public interface GraphNode<E> {
     
     int getIndexOfTop();
-    
+
     E getValue();
 }

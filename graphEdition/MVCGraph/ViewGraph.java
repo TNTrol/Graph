@@ -1,6 +1,4 @@
-package graphEdition.View;
-
-import java.awt.*;
+package graphEdition.MVCGraph;
 
 public interface ViewGraph<T, E, G>
 {

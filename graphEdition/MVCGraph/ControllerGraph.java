@@ -1,11 +1,20 @@
-package graphEdition;
+package graphEdition.MVCGraph;
 
-import graphEdition.View.ViewGraph;
+import graphEdition.AuxiliarySets.Edge;
+import graphEdition.AuxiliarySets.TopGraph;
 
-public class Controller<T, E, G>
+import java.awt.*;
+
+public class ControllerGraph<T, E, G>
 {
     protected Graph<T, E> graph;
     protected ViewGraph<T, E, G> view;
+
+    public ControllerGraph(Graph<T, E> graph, ViewGraph<T, E, G> view)
+    {
+        this.graph = graph;
+        this.view = view;
+    }
 
     public int getIndexOfTop(int x, int y) {
         for (int i = 0; i < graph.countOfTop(); i++) {
@@ -29,19 +38,34 @@ public class Controller<T, E, G>
         return null;
     }
 
-    public void removeTop(int x, int y)
+    public Point getPointOfTop(int top)
     {
-        int i = getIndexOfTop(x,y);
-        if(i >= 0)
-            graph.removeTop(i);
+        TopGraph topGraph = graph.getTopGraphByIndex(top);
+        return new Point(topGraph.getX(), topGraph.getY());
     }
 
-    public void addTop(int x, int y)
+    public boolean removeTop(int x, int y)
     {
-        int i = getIndexOfTop(x, y);
+        int i = getIndexOfTop(x,y);
         if(i < 0)
-            graph.addTop(view.addValueToTop(graph.countOfTop() - 1));
+            return false;
+        graph.removeTop(i);
+        return true;
     }
+
+    public void removeTop(int indexTop)
+    {
+        graph.removeTop(indexTop);
+    }
+
+    public boolean addTop(int x, int y)
+    {
+        int i = graph.countOfTop();
+        graph.addTop(view.addValueToTop(i));
+        graph.getTopGraphByIndex(i).setCoordinates(x, y);
+        return true;
+    }
+
 
     public T valueOfTop(int x, int y)
     {
@@ -54,13 +78,16 @@ public class Controller<T, E, G>
     public void createEdge(int top1, int top2)
     {
         graph.addEdge(view.addValueToEdge(top1, top2), top1, top2);
+        view.showEdge(top1, top2);
     }
 
-    public void removeEdge(int x, int y)
+    public boolean removeEdge(int x, int y)
     {
         Edge edge = getEdge(x, y);
-        if(edge != null)
-            graph.removeEdge(edge.indexTop1, edge.indexTop2);
+        if(edge == null)
+            return false;
+        graph.removeEdge(edge.indexTop1, edge.indexTop2);
+        return true;
     }
 
     public E valueOfEdge(int x, int y)
@@ -88,6 +115,23 @@ public class Controller<T, E, G>
         for (int i = 0; i < graph.countOfTop(); i++) {
             TopGraph top = graph.getTopGraphByIndex(i);
             view.drawTop(top.getX(), top.getY(), i, g);
+        }
+    }
+
+    public void defaultPlace(int w, int h)
+    {
+        int size = graph.countOfTop();
+        int c = (int) Math.sqrt(size);
+        int top = 0;
+        int high = (size % c) == 0 ? size / c : (size - c * c) / (c + 1) + c + 1;
+        for (int i = 0; i < high; i++) {
+            for (int j = 0; j < c; j++) {
+                graph.getTopGraphByIndex(top).setCoordinates (w / (c + 1) * (j + 1), h / (high + 1) * (i + 1));
+                top++;
+                if (size % c != 0 && i == high - 1 && size % c - 1 == j) {
+                    break;
+                }
+            }
         }
     }
 }

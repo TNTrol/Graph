@@ -1,6 +1,4 @@
-package graphEdition.Nodes;
-
-import graphEdition.Nodes.Node;
+package graphEdition.AuxiliarySets;
 
 public class NodeArray <T> implements Node<T>
 {

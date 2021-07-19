@@ -1,4 +1,4 @@
-package graphEdition;
+package graphEdition.AuxiliarySets;
 
 public enum State {
     AddLine,

@@ -3,10 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package graphEdition;
+package graphEdition.Implementation;
 
+import graphEdition.GraphsIml.ArrayGraph;
+import graphEdition.MVCGraph.ControllerGraph;
+import graphEdition.MVCGraph.Graph;
+import graphEdition.AuxiliarySets.GraphNode;
+import graphEdition.AuxiliarySets.State;
 import graphEdition.View.ViewCircleGraph;
-import graphEdition.View.ViewGraph;
+import graphEdition.MVCGraph.ViewGraph;
 
 import java.applet.Applet;
 import java.awt.*;
@@ -25,28 +30,31 @@ import javax.swing.JPopupMenu;
  * @param <T>
  * @param <E>
  */
-public class GraphEdition<T, E> extends JPanel{
+public class GraphJPanelEdition<T, E> extends JPanel{
     private JPopupMenu popup;
 
     protected int currentX, currentY, indexStart = -1, indexEnd = -1;
+    protected Point startPoint ;
     protected State state = State.AddTop;
     protected Graph<T, E> graph;
+    protected ControllerGraph<T, E, Graphics> controllerGraph;
     protected ViewGraph<T,E, Graphics> view;
 
-    public GraphEdition(Graph graph, ViewGraph view, int width, int height)  {
+    public GraphJPanelEdition(Graph graph, ViewGraph<T,E, Graphics> view, int width, int height)  {
         super();
         this.graph = graph;
         this.view = view;
         this.add(new MouseEvents(this));
         this.initPopupMenu();
         this.setSize(width, height);
+        this.controllerGraph = new ControllerGraph<>(graph, view);
     }
 
-    public GraphEdition(int width, int height) {
+    public GraphJPanelEdition(int width, int height) {
         this(new ArrayGraph(), new ViewCircleGraph(), width, height);
     }
 
-    public GraphEdition(ViewCircleGraph view, int width, int height)
+    public GraphJPanelEdition(ViewGraph<T,E, Graphics> view, int width, int height)
     {
         this (new ArrayGraph(), view, width, height);
     }
@@ -107,30 +115,21 @@ public class GraphEdition<T, E> extends JPanel{
         public void mousePressed(MouseEvent evt) {
             if (evt.getButton() == 1) {
                 int x = evt.getX(), y = evt.getY();
-                indexStart = PointOfIndex(x, y);
+                indexStart = controllerGraph.getIndexOfTop(x, y);
                 if (State.AddLine == state && indexStart >= 0) {
                     currentY = y;
                     currentX = x;
+                    startPoint = controllerGraph.getPointOfTop(indexStart);
                     panel.repaint();
-                   // this.paint(getGraphics());
                 }
-                if (State.RemoveLine == state && indexStart < 0) {
-                    Edge p = LineOfIndex(x, y);
-                    if (p != null) {
-                        graph.removeEdge(p.indexTop1, p.indexTop2);
-                        panel.repaint();
-
-                    }
+                if (State.RemoveLine == state && indexStart < 0 && controllerGraph.removeEdge(x, y)){
+                    panel.repaint();
                 }
                 if (State.RemoveTop == state && indexStart >= 0) {
-                    graph.removeTop(indexStart);
+                    controllerGraph.removeTop(indexStart);
                     panel.repaint();
                 }
-                if (State.AddTop == state && indexStart < 0) {
-                    graph.addTop(view.addValueToTop(graph.countOfTop()));
-                    TopGraph top = graph.getTopGraphByIndex(graph.countOfTop() - 1);
-                    top.setX(x);
-                    top.setY(y);
+                if (State.AddTop == state && indexStart < 0 && controllerGraph.addTop(x, y)) {
                     panel.repaint();
                 }
             } else if (evt.getButton() == 3) {
@@ -142,25 +141,22 @@ public class GraphEdition<T, E> extends JPanel{
         public void mouseReleased(MouseEvent evt) {
             if (evt.getButton() == 1) {
                 if (State.AddLine == state && indexStart >= 0) {
-                    indexEnd = PointOfIndex(evt.getX(), evt.getY());
-                    if (indexEnd >= 0 && indexEnd != indexStart && !graph.existEdge(indexStart, indexEnd)) {
-                        graph.addEdge(view.addValueToEdge(indexStart, indexEnd), indexStart, indexEnd);
-                        view.showEdge(indexStart, indexEnd);
+                    indexEnd = controllerGraph.getIndexOfTop(evt.getX(), evt.getY());
+                    if (indexEnd >= 0 && indexEnd != indexStart ) {
+                        controllerGraph.createEdge(indexStart, indexEnd);
                     }
                     indexEnd = -1;
+                    indexStart = -1;
                 }
                 if (State.ValueEdge == state) {
-                    Edge p = LineOfIndex(evt.getX(), evt.getY());
-                        if (p != null) {
-                            view.showEdge(p.indexTop1, p.indexTop2);
-                        }
+                    controllerGraph.valueOfEdge(evt.getX(), evt.getY());
                 }
-                if (State.ValueTop == state && indexStart >= 0) {
-                    view.showTop(indexStart);
+                if (State.ValueTop == state) {
+                    controllerGraph.valueOfTop(evt.getX(), evt.getY());
                 }
                 panel.repaint();
-                indexStart = -1;
             }
+            indexStart = -1;
         }
 
 
@@ -174,15 +170,11 @@ public class GraphEdition<T, E> extends JPanel{
                 currentX = evt.getX();
                 currentY = evt.getY();
                 panel.repaint();
-
             }
             if ((State.RemoveTop != state && State.AddLine != state) && indexStart >= 0) {
-                TopGraph top = graph.getTopGraphByIndex(indexStart);
-                top.setX(evt.getX());
-                top.setY(evt.getY());
+                controllerGraph.replaceTop(indexStart, evt.getX(), evt.getY());
                 panel.repaint();
             }
-
         }
 
         @Override
@@ -247,46 +239,16 @@ public class GraphEdition<T, E> extends JPanel{
     public void paint (Graphics g) {
         super.paint(g);
         g.setColor(Color.BLACK);
-        for (int i = 0; i < graph.countOfTop(); i++) {
-            for (Integer j : graph.row(i)) {
-                    g.setColor(Color.BLACK);
-                    TopGraph top1 = graph.getTopGraphByIndex(i);
-                    TopGraph top2 = graph.getTopGraphByIndex(j);
-                    view.drawEdge(top1.getX(), top1.getY(), top2.getX(), top2.getY(), i, j, g);
-            }
-        }
-        for (int i = 0; i < graph.countOfTop(); i++) {
-            g.setColor(Color.BLACK);
-            TopGraph top = graph.getTopGraphByIndex(i);
-            view.drawTop(top.getX(), top.getY(), i, g);
-        }
+        controllerGraph.paint(g);
         if (State.AddLine == state && indexStart >= 0 ) {
             g.setColor(Color.BLACK);
-            TopGraph top = graph.getTopGraphByIndex(indexStart);
-            view.drawEdge(top.getX(), top.getY(), currentX, currentY, indexStart, -1, g);
+            view.drawEdge(startPoint.x, startPoint.y, currentX, currentY, indexStart, -1, g);
         }
     }
 
-    private Edge LineOfIndex(int x, int y) {
-        for (int i = 0; i < graph.countOfTop(); i++) {
-            for (Integer j: graph.row(i)) {
-                TopGraph top1 = graph.getTopGraphByIndex(i);
-                TopGraph top2 = graph.getTopGraphByIndex(j);
-                if (view.checkEdge(top1.getX(), top1.getY(), top2.getX(), top2.getY(), x, y)) {
-                    return new Edge(i, j);
-                }
-            }
-        }
-        return null;
+    public void click()
+    {
+        controllerGraph.defaultPlace(getWidth(), getHeight());
+        repaint();
     }
-
-    private int PointOfIndex(int x, int y) {
-        for (int i = 0; i < graph.countOfTop(); i++) {
-            if (view.checkPoint(graph.getTopGraphByIndex(i).getX(), graph.getTopGraphByIndex(i).getY(), x, y)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
 }

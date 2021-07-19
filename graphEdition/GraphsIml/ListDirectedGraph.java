@@ -1,7 +1,6 @@
-package graphEdition;
+package graphEdition.GraphsIml;
 
-import graphEdition.Nodes.NodeArray;
-import graphEdition.Nodes.NodeList;
+import graphEdition.AuxiliarySets.NodeList;
 
 import java.util.Iterator;
 

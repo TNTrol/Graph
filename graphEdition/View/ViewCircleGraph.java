@@ -1,6 +1,6 @@
 package graphEdition.View;
 
-import graphEdition.View.ViewGraph;
+import graphEdition.MVCGraph.ViewGraph;
 
 import java.awt.*;
 

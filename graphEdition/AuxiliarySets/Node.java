@@ -1,4 +1,4 @@
-package graphEdition.Nodes;
+package graphEdition.AuxiliarySets;
 
 public interface Node<T> {
 
