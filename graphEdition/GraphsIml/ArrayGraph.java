@@ -225,11 +225,7 @@ public class ArrayGraph<T, E> extends Graph<T, E>
             {
                 if(index < -1)
                     return false;
-                while (true) {
-                    if (row >= countOfTop()) {
-                        index = -2;
-                        return false;
-                    }
+                while (row < countOfTop()) {
                     int i = index + 1;
                     for (; i < countOfTop(); i++) {
                         if (edges[row][i] != null) {
@@ -237,21 +233,23 @@ public class ArrayGraph<T, E> extends Graph<T, E>
                             return true;
                         }
                     }
-                    if (i == countOfTop()) {
-                        index = row;
-                        row++;
-                        continue;
-                    }
-                    return true;
+                    index = row;
+                    row++;
                 }
+                index = -2;
+                return false;
             }
 
             @Override
             public Edge next()
             {
-                NodeArray node = edges[row][index];
                 return new Edge(row, index);
             }
         };
     }
+//
+//    int start_index(int i)
+//    {
+//        return i;
+//    }
 }

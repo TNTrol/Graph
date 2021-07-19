@@ -67,7 +67,7 @@ public abstract class Graph<T, E> {
     public abstract void setEdge(E value, int i, int j);
 
     public abstract Iterable<Integer> row(int i);
-    //Iterable<Integer> allEdges();
+
     TopGraph<T> getTopGraphByIndex(int top)
     {
         return tops.get(top);
@@ -79,5 +79,4 @@ public abstract class Graph<T, E> {
     }
 
     public abstract Iterable<Edge> allEdges();
-    //public void Value(T t);
 }

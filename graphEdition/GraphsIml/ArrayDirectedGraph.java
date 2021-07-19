@@ -36,11 +36,7 @@ public class ArrayDirectedGraph<T, E> extends ArrayGraph<T,E>
             {
                 if(index < -1)
                     return false;
-                while (true) {
-                    if (row >= countOfTop()) {
-                        index = -2;
-                        return false;
-                    }
+                while (row < countOfTop()) {
                     int i = index + 1;
                     for (; i < countOfTop(); i++) {
                         if (edges[row][i] != null) {
@@ -48,13 +44,11 @@ public class ArrayDirectedGraph<T, E> extends ArrayGraph<T,E>
                             return true;
                         }
                     }
-                    if (i == countOfTop()) {
-                        index = -1;
-                        row++;
-                        continue;
-                    }
-                    return true;
+                    index = -1;
+                    row++;
                 }
+                index = -2;
+                return false;
             }
 
             @Override

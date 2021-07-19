@@ -2,7 +2,6 @@ package graphEdition.GraphsIml;
 
 import graphEdition.AuxiliarySets.Edge;
 import graphEdition.AuxiliarySets.GraphNode;
-import graphEdition.AuxiliarySets.NodeArray;
 import graphEdition.MVCGraph.Graph;
 import graphEdition.AuxiliarySets.NodeList;
 
@@ -223,6 +222,36 @@ public class ListGraph<T, E> extends Graph<T, E>
     @Override
     public Iterable<Edge> allEdges()
     {
-        return null;
+        return () -> new Iterator<Edge>()
+        {
+            private int row = 0, top = 0;
+            private Iterator<NodeList<E>> it = 0 < countOfTop()? edge[0].iterator(): null;
+            @Override
+            public boolean hasNext()
+            {
+                if(row < -1 || it == null)
+                    return false;
+                while (true) {
+                    if (!it.hasNext()) {
+                        if (++row >= countOfTop()) {
+                            row = -2;
+                            return false;
+                        }
+                        it = edge[row].iterator();
+                        continue;
+                    }
+                    top = it.next().top;
+                    if(top < row)
+                        continue;
+                    return true;
+                }
+            }
+
+            @Override
+            public Edge next()
+            {
+                return new Edge(row, top);
+            }
+        };
     }
 }

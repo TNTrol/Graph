@@ -102,13 +102,6 @@ public class GraphController<T, E, G>
 
     public void paint(G g)
     {
-//        for (int i = 0; i < graph.countOfTop(); i++) {
-//            for (Integer j : graph.row(i)) {
-//                TopGraph top1 = graph.getTopGraphByIndex(i);
-//                TopGraph top2 = graph.getTopGraphByIndex(j);
-//                view.drawEdge(top1.getX(), top1.getY(), top2.getX(), top2.getY(), i, j, g);
-//            }
-//        }
         for (Edge edge : graph.allEdges())
         {
             TopGraph top1 = graph.getTopGraphByIndex(edge.indexTop1);
