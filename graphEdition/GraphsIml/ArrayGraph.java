@@ -1,5 +1,6 @@
 package graphEdition.GraphsIml;
 
+import graphEdition.AuxiliarySets.Edge;
 import graphEdition.AuxiliarySets.GraphNode;
 import graphEdition.MVCGraph.Graph;
 import graphEdition.AuxiliarySets.NodeArray;
@@ -202,6 +203,54 @@ public class ArrayGraph<T, E> extends Graph<T, E>
                 if(ind < -1)
                     throw new NullPointerException();
                 return ind;
+            }
+        };
+    }
+
+    @Override
+    public void clear()
+    {
+        super.clear();
+        edges = new NodeArray[10][10];
+    }
+
+    @Override
+    public Iterable<Edge> allEdges()
+    {
+        return () -> new Iterator<Edge>()
+        {
+            private int row = 0, index = -1;
+            @Override
+            public boolean hasNext()
+            {
+                if(index < -1)
+                    return false;
+                while (true) {
+                    if (row >= countOfTop()) {
+                        index = -2;
+                        return false;
+                    }
+                    int i = index + 1;
+                    for (; i < countOfTop(); i++) {
+                        if (edges[row][i] != null) {
+                            index = i;
+                            return true;
+                        }
+                    }
+                    if (i == countOfTop()) {
+                        index = row;
+                        row++;
+                        continue;
+                    }
+                    return true;
+                }
+            }
+
+            @Override
+            public Edge next()
+            {
+                NodeArray node = edges[row][index];
+                return new Edge(row, index);
             }
         };
     }

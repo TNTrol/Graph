@@ -1,6 +1,8 @@
 package graphEdition.GraphsIml;
 
+import graphEdition.AuxiliarySets.Edge;
 import graphEdition.AuxiliarySets.GraphNode;
+import graphEdition.AuxiliarySets.NodeArray;
 import graphEdition.MVCGraph.Graph;
 import graphEdition.AuxiliarySets.NodeList;
 
@@ -209,5 +211,18 @@ public class ListGraph<T, E> extends Graph<T, E>
 
         super.removeTop(top);
         return true;
+    }
+
+    @Override
+    public void clear()
+    {
+        super.clear();
+        edge = new LinkedList[10];
+    }
+
+    @Override
+    public Iterable<Edge> allEdges()
+    {
+        return null;
     }
 }

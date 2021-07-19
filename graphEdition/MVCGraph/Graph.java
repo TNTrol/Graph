@@ -5,6 +5,7 @@
  */
 package graphEdition.MVCGraph;
 
+import graphEdition.AuxiliarySets.Edge;
 import graphEdition.AuxiliarySets.GraphNode;
 import graphEdition.AuxiliarySets.TopGraph;
 
@@ -77,5 +78,6 @@ public abstract class Graph<T, E> {
         tops.clear();
     }
 
+    public abstract Iterable<Edge> allEdges();
     //public void Value(T t);
 }

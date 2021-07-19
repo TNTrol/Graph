@@ -5,12 +5,12 @@ import graphEdition.AuxiliarySets.TopGraph;
 
 import java.awt.*;
 
-public class ControllerGraph<T, E, G>
+public class GraphController<T, E, G>
 {
     protected Graph<T, E> graph;
     protected ViewGraph<T, E, G> view;
 
-    public ControllerGraph(Graph<T, E> graph, ViewGraph<T, E, G> view)
+    public GraphController(Graph<T, E> graph, ViewGraph<T, E, G> view)
     {
         this.graph = graph;
         this.view = view;
@@ -26,13 +26,12 @@ public class ControllerGraph<T, E, G>
     }
 
     private Edge getEdge(int x, int y) {
-        for (int i = 0; i < graph.countOfTop(); i++) {
-            for (Integer j: graph.row(i)) {
-                TopGraph top1 = graph.getTopGraphByIndex(i);
-                TopGraph top2 = graph.getTopGraphByIndex(j);
-                if (view.checkEdge(top1.getX(), top1.getY(), top2.getX(), top2.getY(), x, y)) {
-                    return new Edge(i, j);
-                }
+        for (Edge edge : graph.allEdges())
+        {
+            TopGraph top1 = graph.getTopGraphByIndex(edge.indexTop1);
+            TopGraph top2 = graph.getTopGraphByIndex(edge.indexTop2);
+            if (view.checkEdge(top1.getX(), top1.getY(), top2.getX(), top2.getY(), x, y)) {
+                    return edge;
             }
         }
         return null;
@@ -67,12 +66,11 @@ public class ControllerGraph<T, E, G>
     }
 
 
-    public T valueOfTop(int x, int y)
+    public void valueOfTop(int x, int y)
     {
         int i = getIndexOfTop(x,y);
         if(i >= 0)
-            return graph.getTop(i);
-        return null;
+            view.showTop(i);
     }
 
     public void createEdge(int top1, int top2)
@@ -90,12 +88,11 @@ public class ControllerGraph<T, E, G>
         return true;
     }
 
-    public E valueOfEdge(int x, int y)
+    public void valueOfEdge(int x, int y)
     {
         Edge edge = getEdge(x, y);
         if (edge != null)
-            return graph.getEdge(edge.indexTop1, edge.indexTop2);
-        return null;
+            view.showEdge(edge.indexTop1, edge.indexTop2);
     }
 
     public void replaceTop(int top, int x, int y)
@@ -105,12 +102,18 @@ public class ControllerGraph<T, E, G>
 
     public void paint(G g)
     {
-        for (int i = 0; i < graph.countOfTop(); i++) {
-            for (Integer j : graph.row(i)) {
-                TopGraph top1 = graph.getTopGraphByIndex(i);
-                TopGraph top2 = graph.getTopGraphByIndex(j);
-                view.drawEdge(top1.getX(), top1.getY(), top2.getX(), top2.getY(), i, j, g);
-            }
+//        for (int i = 0; i < graph.countOfTop(); i++) {
+//            for (Integer j : graph.row(i)) {
+//                TopGraph top1 = graph.getTopGraphByIndex(i);
+//                TopGraph top2 = graph.getTopGraphByIndex(j);
+//                view.drawEdge(top1.getX(), top1.getY(), top2.getX(), top2.getY(), i, j, g);
+//            }
+//        }
+        for (Edge edge : graph.allEdges())
+        {
+            TopGraph top1 = graph.getTopGraphByIndex(edge.indexTop1);
+            TopGraph top2 = graph.getTopGraphByIndex(edge.indexTop2);
+            view.drawEdge(top1.getX(), top1.getY(), top2.getX(), top2.getY(), edge.indexTop1, edge.indexTop2, g);
         }
         for (int i = 0; i < graph.countOfTop(); i++) {
             TopGraph top = graph.getTopGraphByIndex(i);

@@ -6,7 +6,7 @@
 package graphEdition.Implementation;
 
 import graphEdition.GraphsIml.ArrayGraph;
-import graphEdition.MVCGraph.ControllerGraph;
+import graphEdition.MVCGraph.GraphController;
 import graphEdition.MVCGraph.Graph;
 import graphEdition.AuxiliarySets.GraphNode;
 import graphEdition.AuxiliarySets.State;
@@ -31,23 +31,22 @@ import javax.swing.JPopupMenu;
  * @param <E>
  */
 public class GraphJPanelEdition<T, E> extends JPanel{
-    private JPopupMenu popup;
-
-    protected int currentX, currentY, indexStart = -1, indexEnd = -1;
-    protected Point startPoint ;
-    protected State state = State.AddTop;
-    protected Graph<T, E> graph;
-    protected ControllerGraph<T, E, Graphics> controllerGraph;
-    protected ViewGraph<T,E, Graphics> view;
+    private JPopupMenu _popup;
+    private int _currentX, _currentY, _indexStart = -1, _indexEnd = -1;
+    private Point _startPoint;
+    private State _state = State.AddTop;
+    private Graph<T, E> _graph;
+    private GraphController<T, E, Graphics> _graphController;
+    private ViewGraph<T,E, Graphics> _view;
 
     public GraphJPanelEdition(Graph graph, ViewGraph<T,E, Graphics> view, int width, int height)  {
         super();
-        this.graph = graph;
-        this.view = view;
+        this._graph = graph;
+        this._view = view;
         this.add(new MouseEvents(this));
         this.initPopupMenu();
         this.setSize(width, height);
-        this.controllerGraph = new ControllerGraph<>(graph, view);
+        this._graphController = new GraphController<>(graph, view);
     }
 
     public GraphJPanelEdition(int width, int height) {
@@ -60,7 +59,7 @@ public class GraphJPanelEdition<T, E> extends JPanel{
     }
 
     private void initPopupMenu() {
-        popup = new JPopupMenu();
+        _popup = new JPopupMenu();
         JMenuItem top = new JMenuItem("Add top");
         top.addActionListener((ActionEvent event) -> {
             addTop();
@@ -85,13 +84,13 @@ public class GraphJPanelEdition<T, E> extends JPanel{
         valueEdge.addActionListener((ActionEvent event) -> {
             setValueEdge();
         });
-        popup.add(top);
-        popup.add(connect);
-        popup.add(deleteEdge);
-        popup.add(deleteTop);
-        popup.add(valueTop);
-        popup.add(valueEdge);
-        this.setComponentPopupMenu(popup);
+        _popup.add(top);
+        _popup.add(connect);
+        _popup.add(deleteEdge);
+        _popup.add(deleteTop);
+        _popup.add(valueTop);
+        _popup.add(valueEdge);
+        this.setComponentPopupMenu(_popup);
     }
 
     private class MouseEvents extends Applet implements MouseListener, MouseMotionListener{
@@ -115,48 +114,48 @@ public class GraphJPanelEdition<T, E> extends JPanel{
         public void mousePressed(MouseEvent evt) {
             if (evt.getButton() == 1) {
                 int x = evt.getX(), y = evt.getY();
-                indexStart = controllerGraph.getIndexOfTop(x, y);
-                if (State.AddLine == state && indexStart >= 0) {
-                    currentY = y;
-                    currentX = x;
-                    startPoint = controllerGraph.getPointOfTop(indexStart);
+                _indexStart = _graphController.getIndexOfTop(x, y);
+                if (State.AddLine == _state && _indexStart >= 0) {
+                    _currentY = y;
+                    _currentX = x;
+                    _startPoint = _graphController.getPointOfTop(_indexStart);
                     panel.repaint();
                 }
-                if (State.RemoveLine == state && indexStart < 0 && controllerGraph.removeEdge(x, y)){
+                if (State.RemoveLine == _state && _indexStart < 0 && _graphController.removeEdge(x, y)){
                     panel.repaint();
                 }
-                if (State.RemoveTop == state && indexStart >= 0) {
-                    controllerGraph.removeTop(indexStart);
+                if (State.RemoveTop == _state && _indexStart >= 0) {
+                    _graphController.removeTop(_indexStart);
                     panel.repaint();
                 }
-                if (State.AddTop == state && indexStart < 0 && controllerGraph.addTop(x, y)) {
+                if (State.AddTop == _state && _indexStart < 0 && _graphController.addTop(x, y)) {
                     panel.repaint();
                 }
             } else if (evt.getButton() == 3) {
-                popup.show(panel, evt.getX(), evt.getY());
+                _popup.show(panel, evt.getX(), evt.getY());
             }
         }
 
         @Override
         public void mouseReleased(MouseEvent evt) {
             if (evt.getButton() == 1) {
-                if (State.AddLine == state && indexStart >= 0) {
-                    indexEnd = controllerGraph.getIndexOfTop(evt.getX(), evt.getY());
-                    if (indexEnd >= 0 && indexEnd != indexStart ) {
-                        controllerGraph.createEdge(indexStart, indexEnd);
+                if (State.AddLine == _state && _indexStart >= 0) {
+                    _indexEnd = _graphController.getIndexOfTop(evt.getX(), evt.getY());
+                    if (_indexEnd >= 0 && _indexEnd != _indexStart) {
+                        _graphController.createEdge(_indexStart, _indexEnd);
                     }
-                    indexEnd = -1;
-                    indexStart = -1;
+                    _indexEnd = -1;
+                    _indexStart = -1;
                 }
-                if (State.ValueEdge == state) {
-                    controllerGraph.valueOfEdge(evt.getX(), evt.getY());
+                if (State.ValueEdge == _state) {
+                    _graphController.valueOfEdge(evt.getX(), evt.getY());
                 }
-                if (State.ValueTop == state) {
-                    controllerGraph.valueOfTop(evt.getX(), evt.getY());
+                if (State.ValueTop == _state) {
+                    _graphController.valueOfTop(evt.getX(), evt.getY());
                 }
                 panel.repaint();
             }
-            indexStart = -1;
+            _indexStart = -1;
         }
 
 
@@ -166,13 +165,13 @@ public class GraphJPanelEdition<T, E> extends JPanel{
 
         @Override
         public void mouseDragged(MouseEvent evt) {
-            if (State.AddLine == state && indexStart >= 0) {
-                currentX = evt.getX();
-                currentY = evt.getY();
+            if (State.AddLine == _state && _indexStart >= 0) {
+                _currentX = evt.getX();
+                _currentY = evt.getY();
                 panel.repaint();
             }
-            if ((State.RemoveTop != state && State.AddLine != state) && indexStart >= 0) {
-                controllerGraph.replaceTop(indexStart, evt.getX(), evt.getY());
+            if ((State.RemoveTop != _state && State.AddLine != _state) && _indexStart >= 0) {
+                _graphController.replaceTop(_indexStart, evt.getX(), evt.getY());
                 panel.repaint();
             }
         }
@@ -184,71 +183,71 @@ public class GraphJPanelEdition<T, E> extends JPanel{
     }
 
     public void SetMatrix(E[][] arr) {
-        graph.setMatrix(arr);
+        _graph.setMatrix(arr);
     }
 
     public E[][] GetMatrix(E obj) {
-        return graph.getMatrixValue((Class<E>) obj.getClass());
+        return _graph.getMatrixValue((Class<E>) obj.getClass());
     }
 
     public boolean[][] getAdjMatrixBool() {
-        return graph.getMatrixBool();
+        return _graph.getMatrixBool();
     }
 
     public int countTop() {
-        return graph.countOfTop();
+        return _graph.countOfTop();
     }
 
     public T getTop(int i) {
-        return graph.getTop(i);
+        return _graph.getTop(i);
     }
 
     public E getEdge(int i, int j) {
-        return graph.getEdge(i, j);
+        return _graph.getEdge(i, j);
     }
 
     public void setMatrix(LinkedList<GraphNode>[] arr) {
-        graph.setMatrix(arr);
+        _graph.setMatrix(arr);
     }
 
     public void removeLine() {
-        state = State.RemoveLine;
+        _state = State.RemoveLine;
     }
 
     public void addLine() {
-        state = State.AddLine;
+        _state = State.AddLine;
     }
 
     public void addTop() {
-        state = State.AddTop;
+        _state = State.AddTop;
     }
 
     public void removeTop() {
-        state = State.RemoveTop;
+        _state = State.RemoveTop;
     }
 
     public void setValueEdge() {
-        state = State.ValueEdge;
+        _state = State.ValueEdge;
     }
 
     public void setValueTop() {
-        state = State.ValueTop;
+        _state = State.ValueTop;
     }
 
     @Override
     public void paint (Graphics g) {
         super.paint(g);
         g.setColor(Color.BLACK);
-        controllerGraph.paint(g);
-        if (State.AddLine == state && indexStart >= 0 ) {
+        _graphController.paint(g);
+        if (State.AddLine == _state && _indexStart >= 0 ) {
             g.setColor(Color.BLACK);
-            view.drawEdge(startPoint.x, startPoint.y, currentX, currentY, indexStart, -1, g);
+            _view.drawEdge(_startPoint.x, _startPoint.y, _currentX, _currentY, _indexStart, -1, g);
         }
     }
 
     public void click()
     {
-        controllerGraph.defaultPlace(getWidth(), getHeight());
+        _graphController.defaultPlace(getWidth(), getHeight());
         repaint();
     }
 }
