@@ -217,33 +217,41 @@ public class ArrayGraph<T, E> extends Graph<T, E>
     @Override
     public Iterable<Edge> allEdges()
     {
+        int i = 0, top = -1, size = countOfTop();
+        for (; i < size; i++){
+            for (int j = i; j < size; j++) {
+                if (edges[i][j] != null) {
+                    top = j;
+                    break;
+                }
+            }
+            if(top >= 0)
+                break;
+        }
+        int startIndex = top, startRow = i;
         return () -> new Iterator<Edge>()
         {
-            private int row = 0, index = -1;
+            private int row = startRow, index = startIndex;
             @Override
             public boolean hasNext()
             {
-                if(index < -1)
-                    return false;
-                while (row < countOfTop()) {
-                    int i = index + 1;
-                    for (; i < countOfTop(); i++) {
-                        if (edges[row][i] != null) {
-                            index = i;
-                            return true;
-                        }
-                    }
-                    index = row;
-                    row++;
-                }
-                index = -2;
-                return false;
+                return index >= 0;
             }
 
             @Override
             public Edge next()
             {
-                return new Edge(row, index);
+                if (index < 0)
+                    throw new NullPointerException();
+                Edge edge = new Edge(row, index);
+                for(; row < size; row++) {
+                    for (index++; index < size; index++)
+                        if (edges[row][index] != null)
+                            return edge;
+                        index = row;
+                }
+                index = -1;
+                return edge;
             }
         };
     }

@@ -2,7 +2,7 @@ package graphEdition.View;
 
 import java.awt.*;
 
-public class ViewCircleDirectionGraph<T, E> extends ViewCircleGraph<T, E>
+public class ViewCircleDirectedGraph<T, E> extends ViewCircleGraph<T, E>
 {
     @Override
     public void drawEdge(int x1, int y1, int x2, int y2, int start, int end, Graphics g) {

@@ -12,7 +12,7 @@ import java.util.List;
 
 public class ListGraph<T, E> extends Graph<T, E>
 {
-    protected List<NodeList<E>>[] edge = new LinkedList[10];
+    protected List<NodeList<E>>[] edges = new LinkedList[10];
     @Override
     public E[][] getMatrixValue(Class<E> clazz)
     {
@@ -20,8 +20,8 @@ public class ListGraph<T, E> extends Graph<T, E>
             int size = countOfTop();
             E[][] arr = (E[][]) Array.newInstance(clazz, size, size);
             for (int i = 0; i < size; i++) {
-                if (edge[i] != null) {
-                    for (NodeList node : edge[i]) {
+                if (edges[i] != null) {
+                    for (NodeList node : edges[i]) {
                         arr[i][node.top] = (E) node.getValue();
                         arr[node.top][i] = (E) node.getValue();
                     }
@@ -38,8 +38,8 @@ public class ListGraph<T, E> extends Graph<T, E>
         int size = countOfTop();
         boolean[][] arr = new boolean[size][size];
         for (int i = 0; i < size; i++) {
-            if (edge[i] != null) {
-                for (NodeList node : edge[i]) {
+            if (edges[i] != null) {
+                for (NodeList node : edges[i]) {
                     arr[i][node.top] = true;
                     arr[node.top][i] = true;
                 }
@@ -64,14 +64,14 @@ public class ListGraph<T, E> extends Graph<T, E>
         for (int i = 0; i < arr.length; i++) {
                 super.addTop(null);
         }
-        edge = new LinkedList[arr.length];
+        edges = new LinkedList[arr.length];
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] != null) {
                 for (A temp : arr[i]) {
-                    if (edge[i] == null) {
-                        edge[i] = new LinkedList();
+                    if (edges[i] == null) {
+                        edges[i] = new LinkedList();
                     }
-                        edge[i].add(new NodeList<E>((E) temp.getValue(), temp.getIndexOfTop()));
+                        edges[i].add(new NodeList<E>((E) temp.getValue(), temp.getIndexOfTop()));
 
                 }
             }
@@ -81,7 +81,7 @@ public class ListGraph<T, E> extends Graph<T, E>
     @Override
     public E getEdge(int i, int j)
     {
-        for (NodeList<E> node: edge[i]) {
+        for (NodeList<E> node: edges[i]) {
             if(node.top == j)
                 return node.getValue();
         }
@@ -91,7 +91,7 @@ public class ListGraph<T, E> extends Graph<T, E>
     @Override
     public boolean existEdge(int i, int j)
     {
-        for (NodeList<E> node: edge[i]) {
+        for (NodeList<E> node: edges[i]) {
             if(node.top == j)
                 return true;
         }
@@ -101,23 +101,23 @@ public class ListGraph<T, E> extends Graph<T, E>
     @Override
     public void addEdge(E e, int i, int j)
     {
-        for (Iterator<NodeList<E>> it = edge[i].iterator(); it.hasNext();)
+        for (Iterator<NodeList<E>> it = edges[i].iterator(); it.hasNext();)
             if(it.next().top == j)
                 return;
-        edge[i].add(new NodeList<E>(e, j));
-        edge[j].add(new NodeList<E>(e, i));
+        edges[i].add(new NodeList<E>(e, j));
+        edges[j].add(new NodeList<E>(e, i));
     }
 
     @Override
     public boolean removeEdge(int i, int j)
     {
-        if (edge[i] == null) {
+        if (edges[i] == null) {
             return false;
         }
-        for (Iterator<NodeList<E>> it = edge[i].iterator(); it.hasNext();) {
+        for (Iterator<NodeList<E>> it = edges[i].iterator(); it.hasNext();) {
             if (it.next().top == j) {
                 it.remove();
-                for (Iterator<NodeList<E>> it2 = edge[j].iterator(); it2.hasNext();) {
+                for (Iterator<NodeList<E>> it2 = edges[j].iterator(); it2.hasNext();) {
                     if (it2.next().top == i) {
                         it2.remove();
                         return true;
@@ -131,14 +131,14 @@ public class ListGraph<T, E> extends Graph<T, E>
     @Override
     public void setEdge(E value, int i, int j)
     {
-        for (NodeList<E> node: edge[i]) {
+        for (NodeList<E> node: edges[i]) {
             if(node.top == j)
             {
                 node.setValue(value);
                 return;
             }
         }
-        for (NodeList<E> node: edge[j]) {
+        for (NodeList<E> node: edges[j]) {
             if(node.top == i)
             {
                 node.setValue(value);
@@ -152,7 +152,7 @@ public class ListGraph<T, E> extends Graph<T, E>
     {
         return () -> new Iterator<Integer>()
         {
-            private Iterator<NodeList<E>> it = edge[row].iterator();
+            private Iterator<NodeList<E>> it = edges[row].iterator();
 
             @Override
             public boolean hasNext()
@@ -173,14 +173,14 @@ public class ListGraph<T, E> extends Graph<T, E>
     {
         super.addTop(t);
         int size = countOfTop();
-        if (size > edge.length) {
-            List<NodeList<E>>[] arr = new LinkedList[edge.length * 2];
-            for (int i = 0; i < edge.length; i++) {
-                arr[i] = edge[i];
+        if (size > edges.length) {
+            List<NodeList<E>>[] arr = new LinkedList[edges.length * 2];
+            for (int i = 0; i < edges.length; i++) {
+                arr[i] = edges[i];
             }
-            edge = arr;
+            edges = arr;
         }
-        edge[size - 1] = new LinkedList();
+        edges[size - 1] = new LinkedList();
     }
 
     @Override
@@ -188,11 +188,11 @@ public class ListGraph<T, E> extends Graph<T, E>
     {
         int size = countOfTop();
         for (int i = top; i < size; i++) {
-            edge[i] = i != size - 1 ? edge[i + 1] : new LinkedList();
+            edges[i] = i != size - 1 ? edges[i + 1] : new LinkedList();
         }
         for (int i = 0; i < size; i++) {
-            if (edge[i] != null) {
-                for (Iterator<NodeList<E>> it = edge[i].iterator(); it.hasNext();) {
+            if (edges[i] != null) {
+                for (Iterator<NodeList<E>> it = edges[i].iterator(); it.hasNext();) {
                     if (it.next().top == top) {
                         it.remove();
                         break;
@@ -200,7 +200,7 @@ public class ListGraph<T, E> extends Graph<T, E>
 
                 }
 
-                for (NodeList node : edge[i]) {
+                for (NodeList node : edges[i]) {
                     if (node.top > top) {
                         node.top--;
                     }
@@ -216,41 +216,62 @@ public class ListGraph<T, E> extends Graph<T, E>
     public void clear()
     {
         super.clear();
-        edge = new LinkedList[10];
+        edges = new LinkedList[10];
     }
 
     @Override
     public Iterable<Edge> allEdges()
     {
+        int i = 0, size = countOfTop();
+        Iterator<NodeList<E>> it1 = null;
+        Edge edge1 = null;
+        for (; i < size && edge1 == null; i++) {
+            it1 = edges[i].iterator();
+            while (it1.hasNext())
+            {
+                int t = it1.next().top;
+                if(t > i) {
+                    edge1 = new Edge(i, t);
+                    break;
+                }
+            }
+        }
+        i--;
+
+        Iterator<NodeList<E>> finalIt = it1;
+        int finalI = i;
+        Edge finalEdge = edge1;
         return () -> new Iterator<Edge>()
         {
-            private int row = 0, top = 0;
-            private Iterator<NodeList<E>> it = 0 < countOfTop()? edge[0].iterator(): null;
+            private int row = finalI;
+            private Iterator<NodeList<E>> it = finalIt;
+            private Edge edge = finalEdge;
+
             @Override
             public boolean hasNext()
             {
-                if(row < -1 || it == null)
-                    return false;
-                while (true) {
-                    if (!it.hasNext()) {
-                        if (++row >= countOfTop()) {
-                            row = -2;
-                            return false;
-                        }
-                        it = edge[row].iterator();
-                        continue;
-                    }
-                    top = it.next().top;
-                    if(top < row)
-                        continue;
-                    return true;
-                }
+                return edge != null;
             }
 
             @Override
             public Edge next()
             {
-                return new Edge(row, top);
+                Edge temp = edge;
+                edge = null;
+                while (row < size)
+                {
+                    while (it.hasNext())
+                    {
+                        int top = it.next().top;
+                        if(top > row)
+                        {
+                            edge = new Edge(row, top);
+                            return temp;
+                        }
+                    }
+                    it = ++row == size ? it : edges[row].iterator();
+                }
+                return temp;
             }
         };
     }
