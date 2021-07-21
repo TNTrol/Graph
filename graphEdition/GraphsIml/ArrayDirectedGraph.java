@@ -11,7 +11,7 @@ public class ArrayDirectedGraph<T, E> extends ArrayGraph<T,E>
     @Override
     public boolean removeEdge(int i, int j)
     {
-        if(i >= countOfTop() || j >= countOfTop())
+        if (i < 0 || i >= countOfTop() || j < 0 || j >= countOfTop())
             throw new IndexOutOfBoundsException();
         edges[i][j] = null;
         return true;
@@ -20,8 +20,8 @@ public class ArrayDirectedGraph<T, E> extends ArrayGraph<T,E>
     @Override
     public void addEdge(E e, int i, int j)
     {
-        if(edges[i][j] != null)
-            return;
+        if (i < 0 || i >= countOfTop() || j < 0 || j >= countOfTop())
+            throw new IndexOutOfBoundsException();
         NodeArray<E> edge = new NodeArray<>(e);
         edges[i][j] = edge;
     }

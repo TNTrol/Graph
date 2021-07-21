@@ -1,14 +1,13 @@
 package graphEdition.GraphsIml;
 
-import graphEdition.AuxiliarySets.Edge;
-import graphEdition.AuxiliarySets.GraphNode;
+import graphEdition.AuxiliarySets.*;
 import graphEdition.GraphCore.Graph;
-import graphEdition.AuxiliarySets.NodeList;
 
 import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class ListGraph<T, E> extends Graph<T, E>
 {
@@ -21,9 +20,8 @@ public class ListGraph<T, E> extends Graph<T, E>
             E[][] arr = (E[][]) Array.newInstance(clazz, size, size);
             for (int i = 0; i < size; i++) {
                 if (edges[i] != null) {
-                    for (NodeList node : edges[i]) {
-                        arr[i][node.top] = (E) node.getValue();
-                        arr[node.top][i] = (E) node.getValue();
+                    for (NodeList<E> node : edges[i]) {
+                        arr[i][node.top] = node.getValue();
                     }
                 }
             }
@@ -39,9 +37,8 @@ public class ListGraph<T, E> extends Graph<T, E>
         boolean[][] arr = new boolean[size][size];
         for (int i = 0; i < size; i++) {
             if (edges[i] != null) {
-                for (NodeList node : edges[i]) {
+                for (NodeList<E> node : edges[i]) {
                     arr[i][node.top] = true;
-                    arr[node.top][i] = true;
                 }
             }
         }
@@ -51,11 +48,41 @@ public class ListGraph<T, E> extends Graph<T, E>
     @Override
     public void setMatrix(E[][] arr)
     {
+        if (arr == null) {
+            return;
+        }
+        clear();
+        for (int i = 0; i < arr.length; i++)
+        {
+            if(arr.length != arr[i].length) {
+                clear();
+                throw new IndexOutOfBoundsException("count vertex don't equals count elements of " + i + " row");
+            }
+            super.addTop(null);
+            if (edges[i] == null)
+                edges[i] = new LinkedList<>();
+            for (int j = 0; j < arr.length; j++)
+            {
+                if(arr[i][j] != null)
+                    createEdge(arr[i][j], i, j);
+            }
+        }
+    }
 
+    void createEdge(E value, int row, int top)
+    {
+        if(top > row)
+        {
+            if(edges[top] == null)
+                edges[top] = new LinkedList<>();
+            Wrapper<E> wrapper = new Wrapper<>(value);
+                edges[row].add( new NodeListWithWrapper<>(wrapper, top));
+            edges[top].add( new NodeListWithWrapper<>(wrapper, row));
+        }
     }
 
     @Override
-    public <A extends GraphNode> void setMatrix(LinkedList<A>[] arr)
+    public <A extends GraphNode<E>> void setMatrix(List<A>[] arr)
     {
         if (arr == null) {
             return;
@@ -67,12 +94,16 @@ public class ListGraph<T, E> extends Graph<T, E>
         edges = new LinkedList[arr.length];
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] != null) {
-                for (A temp : arr[i]) {
-                    if (edges[i] == null) {
-                        edges[i] = new LinkedList();
-                    }
-                        edges[i].add(new NodeList<E>((E) temp.getValue(), temp.getIndexOfTop()));
-
+                if (edges[i] == null) {
+                    edges[i] = new LinkedList();
+                }
+                for (GraphNode<E> temp : arr[i]) {
+                        if(temp.getIndexOfTop() >= arr.length)
+                        {
+                            clear();
+                            throw new IndexOutOfBoundsException("Count top of graph " + arr.length + " but find top # " + temp.getIndexOfTop());
+                        }
+                        createEdge(temp.getValue(), i, temp.getIndexOfTop());
                 }
             }
         }
@@ -81,6 +112,8 @@ public class ListGraph<T, E> extends Graph<T, E>
     @Override
     public E getEdge(int i, int j)
     {
+        if (i < 0 || i >= countOfTop() || j < 0 || j >= countOfTop())
+            throw new IndexOutOfBoundsException();
         for (NodeList<E> node: edges[i]) {
             if(node.top == j)
                 return node.getValue();
@@ -91,6 +124,8 @@ public class ListGraph<T, E> extends Graph<T, E>
     @Override
     public boolean existEdge(int i, int j)
     {
+        if (i < 0 || i >= countOfTop() || j < 0 || j >= countOfTop())
+            throw new IndexOutOfBoundsException();
         for (NodeList<E> node: edges[i]) {
             if(node.top == j)
                 return true;
@@ -99,21 +134,23 @@ public class ListGraph<T, E> extends Graph<T, E>
     }
 
     @Override
-    public void addEdge(E e, int i, int j)
+    public void addEdge(E e, int indexTop1, int indexTop2)
     {
-        for (Iterator<NodeList<E>> it = edges[i].iterator(); it.hasNext();)
-            if(it.next().top == j)
+        if (indexTop1 < 0 || indexTop1 >= countOfTop() || indexTop2 < 0 || indexTop2 >= countOfTop())
+            throw new IndexOutOfBoundsException();
+        for (Iterator<NodeList<E>> it = edges[indexTop1].iterator(); it.hasNext();)
+            if(it.next().top == indexTop2)
                 return;
-        edges[i].add(new NodeList<E>(e, j));
-        edges[j].add(new NodeList<E>(e, i));
+        Wrapper<E> wrap = new Wrapper<>(e);
+        edges[indexTop1].add(new NodeListWithWrapper<>(wrap, indexTop2));
+        edges[indexTop2].add(new NodeListWithWrapper<>(wrap, indexTop1));
     }
 
     @Override
     public boolean removeEdge(int i, int j)
     {
-        if (edges[i] == null) {
-            return false;
-        }
+        if (i < 0 || i >= countOfTop() || j < 0 || j >= countOfTop())
+            throw new IndexOutOfBoundsException();
         for (Iterator<NodeList<E>> it = edges[i].iterator(); it.hasNext();) {
             if (it.next().top == j) {
                 it.remove();
@@ -131,15 +168,10 @@ public class ListGraph<T, E> extends Graph<T, E>
     @Override
     public void setEdge(E value, int i, int j)
     {
+        if (i < 0 || i >= countOfTop() || j < 0 || j >= countOfTop())
+            throw new IndexOutOfBoundsException();
         for (NodeList<E> node: edges[i]) {
             if(node.top == j)
-            {
-                node.setValue(value);
-                return;
-            }
-        }
-        for (NodeList<E> node: edges[j]) {
-            if(node.top == i)
             {
                 node.setValue(value);
                 return;
@@ -150,8 +182,9 @@ public class ListGraph<T, E> extends Graph<T, E>
     @Override
     public Iterable<Integer> row(int row)
     {
-        return () -> new Iterator<Integer>()
-        {
+        if (row < 0 || row >= countOfTop())
+            throw new IndexOutOfBoundsException();
+        return () -> new Iterator<>() {
             private Iterator<NodeList<E>> it = edges[row].iterator();
 
             @Override
@@ -163,6 +196,8 @@ public class ListGraph<T, E> extends Graph<T, E>
             @Override
             public Integer next()
             {
+                if (!it.hasNext())
+                    throw new NoSuchElementException();
                 return it.next().top;
             }
         };
@@ -187,6 +222,7 @@ public class ListGraph<T, E> extends Graph<T, E>
     public boolean removeTop(int top)
     {
         int size = countOfTop();
+        super.removeTop(top);
         for (int i = top; i < size; i++) {
             edges[i] = i != size - 1 ? edges[i + 1] : new LinkedList();
         }
@@ -207,8 +243,6 @@ public class ListGraph<T, E> extends Graph<T, E>
                 }
             }
         }
-
-        super.removeTop(top);
         return true;
     }
 

@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.LinkedList;
+import java.util.List;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -39,7 +39,7 @@ public class GraphJPanelEdition<T, E> extends JPanel{
     private GraphController<T, E, Graphics> _graphController;
     private ViewGraph<T,E, Graphics> _view;
 
-    public GraphJPanelEdition(Graph graph, ViewGraph<T,E, Graphics> view, int width, int height)  {
+    public GraphJPanelEdition(Graph<T, E> graph, ViewGraph<T,E, Graphics> view, int width, int height)  {
         super();
         this._graph = graph;
         this._view = view;
@@ -206,7 +206,7 @@ public class GraphJPanelEdition<T, E> extends JPanel{
         return _graph.getEdge(i, j);
     }
 
-    public void setMatrix(LinkedList<GraphNode>[] arr) {
+    public void setMatrix(List<GraphNode<E>>[] arr) {
         _graph.setMatrix(arr);
     }
 

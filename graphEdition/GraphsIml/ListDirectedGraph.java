@@ -2,6 +2,8 @@ package graphEdition.GraphsIml;
 
 import graphEdition.AuxiliarySets.Edge;
 import graphEdition.AuxiliarySets.NodeList;
+import graphEdition.AuxiliarySets.NodeListWithWrapper;
+import graphEdition.AuxiliarySets.Wrapper;
 
 import java.util.Iterator;
 
@@ -11,8 +13,8 @@ public class ListDirectedGraph<T, E> extends ListGraph<T, E>
     @Override
     public boolean removeEdge(int i, int j)
     {
-        if (edges[i] == null) {
-            return false;
+        if (i < 0 || i >= countOfTop() || j < 0 || j >= countOfTop()) {
+            throw new IndexOutOfBoundsException();
         }
         for (Iterator<NodeList<E>> it = edges[i].iterator(); it.hasNext();) {
             if (it.next().top == j) {
@@ -24,24 +26,21 @@ public class ListDirectedGraph<T, E> extends ListGraph<T, E>
     }
 
     @Override
-    public void addEdge(E e, int i, int j)
+    void createEdge(E value, int row, int top)
     {
-        for (Iterator<NodeList<E>> it = edges[i].iterator(); it.hasNext();)
-            if(it.next().top == j)
-                return;
-        edges[i].add(new NodeList<E>(e, j));
+        Wrapper<E> wrapper = new Wrapper<>(value);
+        edges[row].add( new NodeListWithWrapper<>(wrapper, top));
     }
 
     @Override
-    public void setEdge(E value, int i, int j)
+    public void addEdge(E e, int indexTop1, int indexTop2)
     {
-        for (NodeList<E> node: edges[i]) {
-            if(node.top == j)
-            {
-                node.setValue(value);
+        if (indexTop1 < 0 || indexTop1 >= countOfTop() || indexTop2 < 0 || indexTop2 >= countOfTop())
+            throw new IndexOutOfBoundsException();
+        for (Iterator<NodeList<E>> it = edges[indexTop1].iterator(); it.hasNext();)
+            if(it.next().top == indexTop2)
                 return;
-            }
-        }
+        edges[indexTop1].add(new NodeList<E>(e, indexTop2));
     }
 
     @Override
@@ -70,6 +69,8 @@ public class ListDirectedGraph<T, E> extends ListGraph<T, E>
             @Override
             public Edge next()
             {
+                if(!hasNext())
+                    throw new IndexOutOfBoundsException();
                 Edge edge = new Edge(row, it.next().top);
                 while (!it.hasNext() && ++row < size) {
                     it = edges[row].iterator();

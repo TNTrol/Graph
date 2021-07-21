@@ -8,6 +8,7 @@ package graphEdition.GraphCore;
 import graphEdition.AuxiliarySets.Edge;
 import graphEdition.AuxiliarySets.GraphNode;
 import graphEdition.AuxiliarySets.TopGraph;
+import shaforostov.vadim.SecondFrame;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -28,16 +29,18 @@ public abstract class Graph<T, E> {
 
     public abstract void setMatrix(E[][] arr);
 
-    public abstract <A extends GraphNode> void setMatrix(LinkedList<A>[] arr);
+    public abstract <A extends GraphNode<E>> void setMatrix(List<A>[] arr);
 
     public int countOfTop()
     {
         return tops.size();
     }
 
-    public T getTop(int i)
+    public T getTop(int top)
     {
-        return tops.get(i).getValue();
+        if (top < 0 || top >= tops.size())
+            throw new IndexOutOfBoundsException();
+        return tops.get(top).getValue();
     }
 
     public abstract E getEdge(int i, int j);
@@ -51,17 +54,21 @@ public abstract class Graph<T, E> {
 
     public abstract void addEdge(E e, int i, int j);
 
-    public boolean removeTop(int i)
+    public boolean removeTop(int top)
     {
-        tops.remove(i);
+        if (top < 0 || top >= tops.size())
+            throw new IndexOutOfBoundsException();
+        tops.remove(top);
         return true;
     }
 
     public abstract boolean removeEdge(int i, int j);
 
-    public void setTop(T value, int i)
+    public void setTop(T value, int top)
     {
-        tops.get(i).setValue(value);
+        if (top < 0 || top >= tops.size())
+            throw new IndexOutOfBoundsException();
+        tops.get(top).setValue(value);
     }
 
     public abstract void setEdge(E value, int i, int j);
@@ -70,6 +77,8 @@ public abstract class Graph<T, E> {
 
     TopGraph<T> getTopGraphByIndex(int top)
     {
+        if (top < 0 || top >= tops.size())
+            throw new IndexOutOfBoundsException();
         return tops.get(top);
     }
 
@@ -79,4 +88,5 @@ public abstract class Graph<T, E> {
     }
 
     public abstract Iterable<Edge> allEdges();
+
 }
