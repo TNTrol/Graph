@@ -2,7 +2,7 @@ package graphEdition.View;
 
 import java.awt.*;
 
-public class ViewCircleDirectionGraph<T, E> extends ViewCircleGraph<T, E>
+public class ViewCircleDirectedGraph<T, E> extends ViewCircleGraph<T, E>
 {
     @Override
     public void drawEdge(int x1, int y1, int x2, int y2, int start, int end, Graphics g) {
@@ -11,4 +11,5 @@ public class ViewCircleDirectionGraph<T, E> extends ViewCircleGraph<T, E>
         g.drawLine(x2, y2, Math.toIntExact(Math.round(x2 - 10 * Math.sin(angle - 45))), Math.toIntExact(Math.round(y2 - 10 * Math.cos(angle - 45))));
         g.drawLine(x2, y2, Math.toIntExact(Math.round(x2 - 10 * Math.sin(angle + 45))), Math.toIntExact(Math.round(y2 - 10 * Math.cos(angle + 45))));
     }
+
 }

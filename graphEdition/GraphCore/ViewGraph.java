@@ -1,4 +1,4 @@
-package graphEdition.MVCGraph;
+package graphEdition.GraphCore;
 
 public interface ViewGraph<T, E, G>
 {
