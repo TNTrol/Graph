@@ -6,12 +6,12 @@
 package graphEdition.Implementation;
 
 import graphEdition.GraphsIml.ArrayGraph;
-import graphEdition.MVCGraph.GraphController;
-import graphEdition.MVCGraph.Graph;
+import graphEdition.GraphCore.GraphController;
+import graphEdition.GraphCore.Graph;
 import graphEdition.AuxiliarySets.GraphNode;
 import graphEdition.AuxiliarySets.State;
 import graphEdition.View.ViewCircleGraph;
-import graphEdition.MVCGraph.ViewGraph;
+import graphEdition.GraphCore.ViewGraph;
 
 import java.applet.Applet;
 import java.awt.*;

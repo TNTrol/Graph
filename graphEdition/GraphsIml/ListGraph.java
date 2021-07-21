@@ -2,7 +2,7 @@ package graphEdition.GraphsIml;
 
 import graphEdition.AuxiliarySets.Edge;
 import graphEdition.AuxiliarySets.GraphNode;
-import graphEdition.MVCGraph.Graph;
+import graphEdition.GraphCore.Graph;
 import graphEdition.AuxiliarySets.NodeList;
 
 import java.lang.reflect.Array;

@@ -2,12 +2,13 @@ package graphEdition.GraphsIml;
 
 import graphEdition.AuxiliarySets.Edge;
 import graphEdition.AuxiliarySets.GraphNode;
-import graphEdition.MVCGraph.Graph;
+import graphEdition.GraphCore.Graph;
 import graphEdition.AuxiliarySets.NodeArray;
 
 import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 public class ArrayGraph<T, E> extends Graph<T, E>
 {
@@ -177,32 +178,35 @@ public class ArrayGraph<T, E> extends Graph<T, E>
     @Override
     public Iterable<Integer> row(int row)
     {
-        return () -> new Iterator<Integer>()
-        {
-            private int ind = -1;
+        int index = -1, size = countOfTop();
+        for (int i = 0; i < size; i++)
+            if (edges[row][i] != null)
+            {
+                index = i;
+                break;
+            }
+        int finalI = index;
+        return () -> new Iterator<>() {
+            private int ind = finalI;
+
             @Override
             public boolean hasNext()
             {
-                if(ind < -1)
-                    return false;
-                for (int i = ind + 1; i < countOfTop() ; i++)
-                {
-                    if( edges[row][i] != null)
-                    {
-                        ind = i;
-                        return true;
-                    }
-                }
-                ind = -2;
-                return false;
+                return ind >= 0;
             }
 
             @Override
             public Integer next()
             {
-                if(ind < -1)
-                    throw new NullPointerException();
-                return ind;
+                if (ind < 0)
+                    throw new NoSuchElementException();
+                int t = ind;
+                for (ind++; ind < size; ind++)
+                    if (edges[row][ind] != null) {
+                        return t;
+                    }
+                ind = -1;
+                return t;
             }
         };
     }
@@ -255,9 +259,4 @@ public class ArrayGraph<T, E> extends Graph<T, E>
             }
         };
     }
-//
-//    int start_index(int i)
-//    {
-//        return i;
-//    }
 }

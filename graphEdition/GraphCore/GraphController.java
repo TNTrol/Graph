@@ -1,4 +1,4 @@
-package graphEdition.MVCGraph;
+package graphEdition.GraphCore;
 
 import graphEdition.AuxiliarySets.Edge;
 import graphEdition.AuxiliarySets.TopGraph;
