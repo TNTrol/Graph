@@ -27,38 +27,38 @@ public abstract class Graph<T, E> {
 
     public abstract  boolean[][] getMatrixBool();
 
-    public abstract void setMatrix(E[][] arr);
+    public abstract void setMatrix(E[][] adjMatrix);
 
-    public abstract <A extends GraphNode<E>> void setMatrix(List<A>[] arr);
+    public abstract <A extends GraphNode<E>> void setMatrix(List<A>[] adjMatrix);
 
     public int countOfTop()
     {
         return tops.size();
     }
 
-    public T getTop(int top)
+    public T getTop(int indexTop)
     {
-        if (top < 0 || top >= tops.size())
+        if (indexTop < 0 || indexTop >= tops.size())
             throw new IndexOutOfBoundsException();
-        return tops.get(top).getValue();
+        return tops.get(indexTop).getValue();
     }
 
     public abstract E getEdge(int i, int j);
 
     public abstract boolean existEdge(int i, int j);
 
-    public void addTop(T t)
+    public void addTop(T value)
     {
-        tops.add(new TopGraph<T>(t));
+        tops.add(new TopGraph<T>(value));
     }
 
-    public abstract void addEdge(E e, int i, int j);
+    public abstract void addEdge(E value, int i, int j);
 
-    public boolean removeTop(int top)
+    public boolean removeTop(int indexTop)
     {
-        if (top < 0 || top >= tops.size())
+        if (indexTop < 0 || indexTop >= tops.size())
             throw new IndexOutOfBoundsException();
-        tops.remove(top);
+        tops.remove(indexTop);
         return true;
     }
 
@@ -73,13 +73,13 @@ public abstract class Graph<T, E> {
 
     public abstract void setEdge(E value, int i, int j);
 
-    public abstract Iterable<Integer> row(int i);
+    public abstract Iterable<Integer> row(int indexRow);
 
-    TopGraph<T> getTopGraphByIndex(int top)
+    TopGraph<T> getTopGraphByIndex(int indexTop)
     {
-        if (top < 0 || top >= tops.size())
+        if (indexTop < 0 || indexTop >= tops.size())
             throw new IndexOutOfBoundsException();
-        return tops.get(top);
+        return tops.get(indexTop);
     }
 
     public void clear()

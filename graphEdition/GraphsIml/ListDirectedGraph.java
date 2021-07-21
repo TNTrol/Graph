@@ -28,19 +28,18 @@ public class ListDirectedGraph<T, E> extends ListGraph<T, E>
     @Override
     void createEdge(E value, int row, int top)
     {
-        Wrapper<E> wrapper = new Wrapper<>(value);
-        edges[row].add( new NodeListWithWrapper<>(wrapper, top));
+        edges[row].add( new NodeList<>(value, top));
     }
 
     @Override
-    public void addEdge(E e, int indexTop1, int indexTop2)
+    public void addEdge(E value, int indexTop1, int indexTop2)
     {
         if (indexTop1 < 0 || indexTop1 >= countOfTop() || indexTop2 < 0 || indexTop2 >= countOfTop())
             throw new IndexOutOfBoundsException();
         for (Iterator<NodeList<E>> it = edges[indexTop1].iterator(); it.hasNext();)
             if(it.next().top == indexTop2)
                 return;
-        edges[indexTop1].add(new NodeList<E>(e, indexTop2));
+        edges[indexTop1].add(new NodeList<E>(value, indexTop2));
     }
 
     @Override

@@ -18,11 +18,11 @@ public class ArrayDirectedGraph<T, E> extends ArrayGraph<T,E>
     }
 
     @Override
-    public void addEdge(E e, int i, int j)
+    public void addEdge(E value, int i, int j)
     {
         if (i < 0 || i >= countOfTop() || j < 0 || j >= countOfTop())
             throw new IndexOutOfBoundsException();
-        NodeArray<E> edge = new NodeArray<>(e);
+        NodeArray<E> edge = new NodeArray<>(value);
         edges[i][j] = edge;
     }
 
