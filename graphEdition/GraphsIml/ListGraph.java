@@ -14,13 +14,13 @@ import java.util.NoSuchElementException;
  * @param <T> Тип вершины
  * @param <E> Тип ребра
  * @see Graph
- * @author tntrol
+ * @author TNTrol
  */
 public class ListGraph<T, E> extends Graph<T, E>
 {
     protected List<NodeList<E>>[] edges = new LinkedList[10];
     @Override
-    public E[][] getMatrixValue(Class<E> clazz)
+    public E[][] getAdjMatrixValue(Class<E> clazz)
     {
         if (clazz != null) {
             int size = countOfTop();
@@ -38,7 +38,7 @@ public class ListGraph<T, E> extends Graph<T, E>
     }
 
     @Override
-    public boolean[][] getMatrixBool()
+    public boolean[][] getAdjMatrixBool()
     {
         int size = countOfTop();
         boolean[][] arr = new boolean[size][size];
@@ -53,7 +53,7 @@ public class ListGraph<T, E> extends Graph<T, E>
     }
 
     @Override
-    public void setMatrix(E[][] adjMatrix)
+    public void setAdjMatrix(E[][] adjMatrix)
     {
         if (adjMatrix == null) {
             return;
@@ -89,7 +89,7 @@ public class ListGraph<T, E> extends Graph<T, E>
     }
 
     @Override
-    public <A extends GraphNode<E>> void setMatrix(List<A>[] adjMatrix)
+    public <A extends GraphNode<E>> void setAdjMatrix(List<A>[] adjMatrix)
     {
         if (adjMatrix == null) {
             return;
@@ -117,52 +117,53 @@ public class ListGraph<T, E> extends Graph<T, E>
     }
 
     @Override
-    public E getEdge(int i, int j)
+    public E getEdge(int indexTop1, int indexTop2)
     {
-        if (i < 0 || i >= countOfTop() || j < 0 || j >= countOfTop())
+        if (indexTop1 < 0 || indexTop1 >= countOfTop() || indexTop2 < 0 || indexTop2 >= countOfTop())
             throw new IndexOutOfBoundsException();
-        for (NodeList<E> node: edges[i]) {
-            if(node.top == j)
+        for (NodeList<E> node: edges[indexTop1]) {
+            if(node.top == indexTop2)
                 return node.getValue();
         }
         return null;
     }
 
     @Override
-    public boolean existEdge(int i, int j)
+    public boolean existEdge(int indexTop1, int indexTop2)
     {
-        if (i < 0 || i >= countOfTop() || j < 0 || j >= countOfTop())
+        if (indexTop1 < 0 || indexTop1 >= countOfTop() || indexTop2 < 0 || indexTop2 >= countOfTop())
             throw new IndexOutOfBoundsException();
-        for (NodeList<E> node: edges[i]) {
-            if(node.top == j)
+        for (NodeList<E> node: edges[indexTop1]) {
+            if(node.top == indexTop2)
                 return true;
         }
         return false;
     }
 
     @Override
-    public void addEdge(E value, int indexTop1, int indexTop2)
+    public boolean addEdge(E value, int indexTop1, int indexTop2)
     {
         if (indexTop1 < 0 || indexTop1 >= countOfTop() || indexTop2 < 0 || indexTop2 >= countOfTop())
             throw new IndexOutOfBoundsException();
         for (Iterator<NodeList<E>> it = edges[indexTop1].iterator(); it.hasNext();)
             if(it.next().top == indexTop2)
-                return;
+                return false;
         Wrapper<E> wrap = new Wrapper<>(value);
         edges[indexTop1].add(new NodeListWithWrapper<>(wrap, indexTop2));
         edges[indexTop2].add(new NodeListWithWrapper<>(wrap, indexTop1));
+        return true;
     }
 
     @Override
-    public boolean removeEdge(int i, int j)
+    public boolean removeEdge(int indexTop1, int indexTop2)
     {
-        if (i < 0 || i >= countOfTop() || j < 0 || j >= countOfTop())
+        if (indexTop1 < 0 || indexTop1 >= countOfTop() || indexTop2 < 0 || indexTop2 >= countOfTop())
             throw new IndexOutOfBoundsException();
-        for (Iterator<NodeList<E>> it = edges[i].iterator(); it.hasNext();) {
-            if (it.next().top == j) {
+        for (Iterator<NodeList<E>> it = edges[indexTop1].iterator(); it.hasNext();) {
+            if (it.next().top == indexTop2) {
                 it.remove();
-                for (Iterator<NodeList<E>> it2 = edges[j].iterator(); it2.hasNext();) {
-                    if (it2.next().top == i) {
+                for (Iterator<NodeList<E>> it2 = edges[indexTop2].iterator(); it2.hasNext();) {
+                    if (it2.next().top == indexTop1) {
                         it2.remove();
                         return true;
                     }
@@ -173,12 +174,12 @@ public class ListGraph<T, E> extends Graph<T, E>
     }
 
     @Override
-    public void setEdge(E value, int i, int j)
+    public void setValueOfEdge(E value, int indexTop1, int indexTop2)
     {
-        if (i < 0 || i >= countOfTop() || j < 0 || j >= countOfTop())
+        if (indexTop1 < 0 || indexTop1 >= countOfTop() || indexTop2 < 0 || indexTop2 >= countOfTop())
             throw new IndexOutOfBoundsException();
-        for (NodeList<E> node: edges[i]) {
-            if(node.top == j)
+        for (NodeList<E> node: edges[indexTop1]) {
+            if(node.top == indexTop2)
             {
                 node.setValue(value);
                 return;
@@ -187,12 +188,12 @@ public class ListGraph<T, E> extends Graph<T, E>
     }
 
     @Override
-    public Iterable<Integer> row(int indexRow)
+    public Iterable<Integer> row(int indexTop)
     {
-        if (indexRow < 0 || indexRow >= countOfTop())
+        if (indexTop < 0 || indexTop >= countOfTop())
             throw new IndexOutOfBoundsException();
         return () -> new Iterator<>() {
-            private Iterator<NodeList<E>> it = edges[indexRow].iterator();
+            private Iterator<NodeList<E>> it = edges[indexTop].iterator();
 
             @Override
             public boolean hasNext()

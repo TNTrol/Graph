@@ -183,7 +183,8 @@ public class SwingUtils {
     
     /**
      * Установка размера шрифта по умолчанию для элементов управления
-     * @param fontName Название шрифта (null - не менять)
+     * @param size размер шрифта
+     * fontName Название шрифта (null - не менять)
      */
     public static void setDefaultFont(int size) {
         setDefaultFont(null, size);

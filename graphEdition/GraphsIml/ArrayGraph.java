@@ -16,7 +16,7 @@ import java.util.NoSuchElementException;
  * @param <T> Тип вершины
  * @param <E> Тип ребра
  * @see Graph
- * @author tntrol
+ * @author TNTrol
  */
 public class ArrayGraph<T, E> extends Graph<T, E>
 {
@@ -25,7 +25,7 @@ public class ArrayGraph<T, E> extends Graph<T, E>
     public ArrayGraph()
     { }
     @Override
-    public E[][] getMatrixValue(Class<E> clazz)
+    public E[][] getAdjMatrixValue(Class<E> clazz)
     {
         if (clazz != null) {
             int size = countOfTop();
@@ -43,7 +43,7 @@ public class ArrayGraph<T, E> extends Graph<T, E>
     }
 
     @Override
-    public boolean[][] getMatrixBool()
+    public boolean[][] getAdjMatrixBool()
     {
         int size = countOfTop();
         boolean[][] arr = new boolean[size][size];
@@ -59,7 +59,7 @@ public class ArrayGraph<T, E> extends Graph<T, E>
     }
 
     @Override
-    public void setMatrix(E[][] adjMatrix)
+    public void setAdjMatrix(E[][] adjMatrix)
     {
         if (adjMatrix != null) {
             edges = new NodeArray[adjMatrix.length][adjMatrix.length];
@@ -76,7 +76,7 @@ public class ArrayGraph<T, E> extends Graph<T, E>
     }
 
     @Override
-    public <A extends GraphNode<E>>  void setMatrix(List<A>[] adjMatrix)
+    public <A extends GraphNode<E>>  void setAdjMatrix(List<A>[] adjMatrix)
     {
         if (adjMatrix == null) {
             return;
@@ -103,19 +103,19 @@ public class ArrayGraph<T, E> extends Graph<T, E>
     }
 
     @Override
-    public E getEdge(int i, int j)
+    public E getEdge(int indexTop1, int indexTop2)
     {
-        if (i < 0 || i >= countOfTop() || j < 0 || j >= countOfTop())
+        if (indexTop1 < 0 || indexTop1 >= countOfTop() || indexTop2 < 0 || indexTop2 >= countOfTop())
             throw new IndexOutOfBoundsException();
-        return edges[i][j] == null ? null : edges[i][j].getValue();
+        return edges[indexTop1][indexTop2] == null ? null : edges[indexTop1][indexTop2].getValue();
     }
 
     @Override
-    public boolean existEdge(int i, int j)
+    public boolean existEdge(int indexTop1, int indexTop2)
     {
-        if (i < 0 || i >= countOfTop() || j < 0 || j >= countOfTop())
+        if (indexTop1 < 0 || indexTop1 >= countOfTop() || indexTop2 < 0 || indexTop2 >= countOfTop())
             throw new IndexOutOfBoundsException();
-        return edges[i][j] != null;
+        return edges[indexTop1][indexTop2] != null;
     }
 
     @Override
@@ -134,13 +134,16 @@ public class ArrayGraph<T, E> extends Graph<T, E>
     }
 
     @Override
-    public void addEdge(E value, int i, int j)
+    public boolean addEdge(E value, int indexTop1, int indexTop2)
     {
-        if (i < 0 || i >= countOfTop() || j < 0 || j >= countOfTop())
+        if (indexTop1 < 0 || indexTop1 >= countOfTop() || indexTop2 < 0 || indexTop2 >= countOfTop())
             throw new IndexOutOfBoundsException();
+        if(edges[indexTop1][indexTop2] != null)
+            return false;
         NodeArray<E> edge = new NodeArray<>(value);
-        edges[i][j] = edge;
-        edges[j][i] = edge;
+        edges[indexTop1][indexTop2] = edge;
+        edges[indexTop2][indexTop1] = edge;
+        return true;
     }
 
     @Override
@@ -162,32 +165,32 @@ public class ArrayGraph<T, E> extends Graph<T, E>
     }
 
     @Override
-    public boolean removeEdge(int i, int j)
+    public boolean removeEdge(int indexTop1, int indexTop2)
     {
-        if(i >= countOfTop() || i < 0 || j < 0 || j >= countOfTop())
+        if(indexTop1 >= countOfTop() || indexTop1 < 0 || indexTop2 < 0 || indexTop2 >= countOfTop())
             throw new IndexOutOfBoundsException();
-        edges[i][j] = null;
-        edges[j][i] = null;
+        edges[indexTop1][indexTop2] = null;
+        edges[indexTop2][indexTop1] = null;
         return true;
     }
 
     @Override
-    public void setEdge(E value, int i, int j)
+    public void setValueOfEdge(E value, int indexTop1, int indexTop2)
     {
-        if (i < 0 || i >= countOfTop() || j < 0 || j >= countOfTop())
+        if (indexTop1 < 0 || indexTop1 >= countOfTop() || indexTop2 < 0 || indexTop2 >= countOfTop())
             throw new IndexOutOfBoundsException();
-        if(edges[i][j] != null)
-            edges[i][j].setValue(value);
+        if(edges[indexTop1][indexTop2] != null)
+            edges[indexTop1][indexTop2].setValue(value);
     }
 
     @Override
-    public Iterable<Integer> row(int indexRow)
+    public Iterable<Integer> row(int indexTop)
     {
-        if (indexRow < 0 || indexRow >= countOfTop())
+        if (indexTop < 0 || indexTop >= countOfTop())
             throw new IndexOutOfBoundsException();
         int index = -1, size = countOfTop();
         for (int i = 0; i < size; i++)
-            if (edges[indexRow][i] != null)
+            if (edges[indexTop][i] != null)
             {
                 index = i;
                 break;
@@ -209,7 +212,7 @@ public class ArrayGraph<T, E> extends Graph<T, E>
                     throw new NoSuchElementException();
                 int t = ind;
                 for (ind++; ind < size; ind++)
-                    if (edges[indexRow][ind] != null) {
+                    if (edges[indexTop][ind] != null) {
                         return t;
                     }
                 ind = -1;

@@ -10,19 +10,19 @@ import java.util.Iterator;
  * @param <T> Тип вершины
  * @param <E> Тип ребра
  * @see Graph
- * @author tntrol
+ * @author TNTrol
  */
 public class ListDirectedGraph<T, E> extends ListGraph<T, E>
 {
 
     @Override
-    public boolean removeEdge(int i, int j)
+    public boolean removeEdge(int indexTop1, int indexTop2)
     {
-        if (i < 0 || i >= countOfTop() || j < 0 || j >= countOfTop()) {
+        if (indexTop1 < 0 || indexTop1 >= countOfTop() || indexTop2 < 0 || indexTop2 >= countOfTop()) {
             throw new IndexOutOfBoundsException();
         }
-        for (Iterator<NodeList<E>> it = edges[i].iterator(); it.hasNext();) {
-            if (it.next().top == j) {
+        for (Iterator<NodeList<E>> it = edges[indexTop1].iterator(); it.hasNext();) {
+            if (it.next().top == indexTop2) {
                 it.remove();
                 return true;
             }
@@ -37,14 +37,15 @@ public class ListDirectedGraph<T, E> extends ListGraph<T, E>
     }
 
     @Override
-    public void addEdge(E value, int indexTop1, int indexTop2)
+    public boolean addEdge(E value, int indexTop1, int indexTop2)
     {
         if (indexTop1 < 0 || indexTop1 >= countOfTop() || indexTop2 < 0 || indexTop2 >= countOfTop())
             throw new IndexOutOfBoundsException();
         for (Iterator<NodeList<E>> it = edges[indexTop1].iterator(); it.hasNext();)
             if(it.next().top == indexTop2)
-                return;
+                return false;
         edges[indexTop1].add(new NodeList<E>(value, indexTop2));
+        return true;
     }
 
     @Override

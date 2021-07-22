@@ -4,6 +4,12 @@ import graphEdition.GraphCore.ViewGraph;
 
 import java.awt.*;
 
+/**
+ * Класс отображающий вершины графа в вииде кругов и индексов вершин и ребра в виде линий
+ * @param <T> Тип вершины
+ * @param <E> Тип ребра
+ * @author TNTrol
+ */
 public class ViewCircleGraph<T, E> implements ViewGraph<T, E, Graphics>
 {
     public int R = 10, D = 10;

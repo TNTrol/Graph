@@ -10,7 +10,7 @@ import java.awt.*;
  * @param <T> Тип вершины графа
  * @param <E> Тип ребер графа
  * @param <G> Тип объектна, с помощью которого будет производится отрисовка
- * @author tntrol
+ * @author TNTrol
  */
 public class GraphController<T, E, G>
 {
@@ -37,9 +37,9 @@ public class GraphController<T, E, G>
     }
 
     /**
-     * Метод для получения индекса вершины по координатам, если вершины нет, то
-     * @param x
-     * @param y
+     * Метод для получения индекса вершины по координатам, если вершины нет, то -1
+     * @param x х состовляющая точки
+     * @param y у состовляющая точки
      * @return
      */
     public int getIndexOfTop(int x, int y) {
@@ -52,12 +52,12 @@ public class GraphController<T, E, G>
     }
 
     /**
-     * Приватный метод для получения ребра по координатам, если нет такого ребра то вернет null
-     * @param x
-     * @param y
+     * Метод для получения ребра по координатам, если нет такого ребра то вернет null
+     * @param x х состовляющая точки
+     * @param y у состовляющая точки
      * @return
      */
-    private Edge getEdge(int x, int y) {
+    public Edge getEdge(int x, int y) {
         for (Edge edge : graph.allEdges())
         {
             TopGraph top1 = graph.getTopGraphByIndex(edge.indexTop1);
@@ -103,8 +103,8 @@ public class GraphController<T, E, G>
 
     /**
      * Метод для создания новой вершины в заданных координатах
-     * @param x
-     * @param y
+     * @param x х состовляющая точки
+     * @param y у состовляющая точки
      * @return
      */
     public boolean addTop(int x, int y)
@@ -116,9 +116,10 @@ public class GraphController<T, E, G>
     }
 
     /**
-     * Значение вершины по координатам
-     * @param x
-     * @param y
+     * Вывести значение вершины по координатам во ViewGraph
+     * @param x х состовляющая точки
+     * @param y у состовляющая точки
+     * @see ViewGraph
      */
     public void valueOfTop(int x, int y)
     {
@@ -128,14 +129,14 @@ public class GraphController<T, E, G>
     }
 
     /**
-     * Метод для создание ребра между вершинами
-     * @param top1 Первая вершина
-     * @param top2 Вторая вершина
+     * Метод для создание ребра между вершинами по их индексам, Запрашивает значение у View и выводит индексы ребра
+     * @param indexTop1 Первая вершина
+     * @param indexTop2 Вторая вершина
      */
-    public void createEdge(int top1, int top2)
+    public void createEdge(int indexTop1, int indexTop2)
     {
-        graph.addEdge(view.addValueToEdge(top1, top2), top1, top2);
-        view.showEdge(top1, top2);
+        graph.addEdge(view.addValueToEdge(indexTop1, indexTop2), indexTop1, indexTop2);
+        view.showEdge(indexTop1, indexTop2);
     }
 
     /**

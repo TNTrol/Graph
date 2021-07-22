@@ -10,27 +10,30 @@ import java.util.NoSuchElementException;
  * Класс для хранения ориентированного графа на основе двумерного массива, реализующий класс Graph
  * @param <T> Тип вершины
  * @param <E> Тип ребра
- * @see Graph\
- * @author tntrol
+ * @see Graph
+ * @author TNTrol
  */
 public class ArrayDirectedGraph<T, E> extends ArrayGraph<T,E>
 {
     @Override
-    public boolean removeEdge(int i, int j)
+    public boolean removeEdge(int indexTop1, int indexTop2)
     {
-        if (i < 0 || i >= countOfTop() || j < 0 || j >= countOfTop())
+        if (indexTop1 < 0 || indexTop1 >= countOfTop() || indexTop2 < 0 || indexTop2 >= countOfTop())
             throw new IndexOutOfBoundsException();
-        edges[i][j] = null;
+        edges[indexTop1][indexTop2] = null;
         return true;
     }
 
     @Override
-    public void addEdge(E value, int i, int j)
+    public boolean addEdge(E value, int indexTop1, int indexTop2)
     {
-        if (i < 0 || i >= countOfTop() || j < 0 || j >= countOfTop())
+        if (indexTop1 < 0 || indexTop1 >= countOfTop() || indexTop2 < 0 || indexTop2 >= countOfTop())
             throw new IndexOutOfBoundsException();
+        if(edges[indexTop1][indexTop2] != null)
+            return false;
         NodeArray<E> edge = new NodeArray<>(value);
-        edges[i][j] = edge;
+        edges[indexTop1][indexTop2] = edge;
+        return true;
     }
 
     @Override

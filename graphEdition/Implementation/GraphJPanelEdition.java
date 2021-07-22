@@ -13,7 +13,6 @@ import graphEdition.AuxiliarySets.State;
 import graphEdition.View.ViewCircleGraph;
 import graphEdition.GraphCore.ViewGraph;
 
-import java.applet.Applet;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
@@ -43,7 +42,7 @@ public class GraphJPanelEdition<T, E> extends JPanel{
         super();
         this._graph = graph;
         this._view = view;
-        this.add(new MouseEvents(this));
+        new MouseEvents(this);
         this.initPopupMenu();
         this.setSize(width, height);
         this._graphController = new GraphController<>(graph, view);
@@ -93,7 +92,7 @@ public class GraphJPanelEdition<T, E> extends JPanel{
         this.setComponentPopupMenu(_popup);
     }
 
-    private class MouseEvents extends Applet implements MouseListener, MouseMotionListener{
+    private class MouseEvents implements MouseListener, MouseMotionListener{
 
         private JPanel panel;
         public MouseEvents(JPanel panel) {
@@ -183,15 +182,15 @@ public class GraphJPanelEdition<T, E> extends JPanel{
     }
 
     public void SetMatrix(E[][] arr) {
-        _graph.setMatrix(arr);
+        _graph.setAdjMatrix(arr);
     }
 
     public E[][] GetMatrix(E obj) {
-        return _graph.getMatrixValue((Class<E>) obj.getClass());
+        return _graph.getAdjMatrixValue((Class<E>) obj.getClass());
     }
 
     public boolean[][] getAdjMatrixBool() {
-        return _graph.getMatrixBool();
+        return _graph.getAdjMatrixBool();
     }
 
     public int countTop() {
@@ -207,7 +206,7 @@ public class GraphJPanelEdition<T, E> extends JPanel{
     }
 
     public void setMatrix(List<GraphNode<E>>[] arr) {
-        _graph.setMatrix(arr);
+        _graph.setAdjMatrix(arr);
     }
 
     public void removeLine() {

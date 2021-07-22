@@ -2,6 +2,12 @@ package graphEdition.View;
 
 import java.awt.*;
 
+/**
+ * Класс отображающий вершины ориентированного графа в вииде кругов и индексов вершин и ребра в виде линий cо стрелками
+ * @param <T> Тип вершины
+ * @param <E> Тип ребра
+ * @author TNTrol
+ */
 public class ViewCircleDirectedGraph<T, E> extends ViewCircleGraph<T, E>
 {
     @Override

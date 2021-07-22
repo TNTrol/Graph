@@ -2,7 +2,7 @@ package graphEdition.AuxiliarySets;
 
 /**
  * Класс для хранения индексов смежных вершин
- * @author tntrol
+ * @author TNTrol
  */
 public class Edge
 {

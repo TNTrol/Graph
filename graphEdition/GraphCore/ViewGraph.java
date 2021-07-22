@@ -5,6 +5,7 @@ package graphEdition.GraphCore;
  * @param <T> Тип вершины графа
  * @param <E> Тип ребер графа
  * @param <G> Тип объектна, с помощью которого будет производится отрисовка
+ * @author TNTrol
  */
 public interface ViewGraph<T, E, G>
 {
