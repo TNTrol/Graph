@@ -5,6 +5,10 @@
  */
 package graphEdition.AuxiliarySets;
 
+/**
+ * Класс для хранения вершины графа
+ * @param <T>
+ */
 public class TopGraph<T> {
     private int x = 0, y = 0;
     private T value;

@@ -5,17 +5,43 @@ import graphEdition.AuxiliarySets.TopGraph;
 
 import java.awt.*;
 
+/**
+ * Класс для корректной визуализации графа
+ * @param <T> Тип вершины графа
+ * @param <E> Тип ребер графа
+ * @param <G> Тип объектна, с помощью которого будет производится отрисовка
+ * @author tntrol
+ */
 public class GraphController<T, E, G>
 {
+    /**
+     * Поле графа
+     * @see Graph
+     */
     protected Graph<T, E> graph;
+    /**
+     * Поле отображения
+     * @see ViewGraph
+     */
     protected ViewGraph<T, E, G> view;
 
+    /**
+     *
+     * @param graph Граф, который нужно визуализировать
+     * @param view Визуальная прослойка для взаимодествия с пользователем
+     */
     public GraphController(Graph<T, E> graph, ViewGraph<T, E, G> view)
     {
         this.graph = graph;
         this.view = view;
     }
 
+    /**
+     * Метод для получения индекса вершины по координатам, если вершины нет, то
+     * @param x
+     * @param y
+     * @return
+     */
     public int getIndexOfTop(int x, int y) {
         for (int i = 0; i < graph.countOfTop(); i++) {
             if (view.checkPoint(graph.getTopGraphByIndex(i).getX(), graph.getTopGraphByIndex(i).getY(), x, y)) {
@@ -25,6 +51,12 @@ public class GraphController<T, E, G>
         return -1;
     }
 
+    /**
+     * Приватный метод для получения ребра по координатам, если нет такого ребра то вернет null
+     * @param x
+     * @param y
+     * @return
+     */
     private Edge getEdge(int x, int y) {
         for (Edge edge : graph.allEdges())
         {
@@ -37,26 +69,44 @@ public class GraphController<T, E, G>
         return null;
     }
 
+    /**
+     * Метод для возвращения координат типа Point вершины по её индексу
+     * @param top Индекс вершины
+     * @return
+     * @see Point
+     */
     public Point getPointOfTop(int top)
     {
         TopGraph topGraph = graph.getTopGraphByIndex(top);
         return new Point(topGraph.getX(), topGraph.getY());
     }
 
-    public boolean removeTop(int x, int y)
+    /**
+     * Метод для получения вершины типа TopGraph по её индексу
+     * @param indexTop Индекс вершины
+     * @return
+     * @see TopGraph
+     */
+    public TopGraph<T> getTopGraph(int indexTop)
     {
-        int i = getIndexOfTop(x,y);
-        if(i < 0)
-            return false;
-        graph.removeTop(i);
-        return true;
+        return graph.getTopGraphByIndex(indexTop);
     }
 
+    /**
+     * Метод для удалеия вершины по ёё индексу
+     * @param indexTop Индекс вершины
+     */
     public void removeTop(int indexTop)
     {
         graph.removeTop(indexTop);
     }
 
+    /**
+     * Метод для создания новой вершины в заданных координатах
+     * @param x
+     * @param y
+     * @return
+     */
     public boolean addTop(int x, int y)
     {
         int i = graph.countOfTop();
@@ -65,7 +115,11 @@ public class GraphController<T, E, G>
         return true;
     }
 
-
+    /**
+     * Значение вершины по координатам
+     * @param x
+     * @param y
+     */
     public void valueOfTop(int x, int y)
     {
         int i = getIndexOfTop(x,y);
@@ -73,12 +127,23 @@ public class GraphController<T, E, G>
             view.showTop(i);
     }
 
+    /**
+     * Метод для создание ребра между вершинами
+     * @param top1 Первая вершина
+     * @param top2 Вторая вершина
+     */
     public void createEdge(int top1, int top2)
     {
         graph.addEdge(view.addValueToEdge(top1, top2), top1, top2);
         view.showEdge(top1, top2);
     }
 
+    /**
+     * Метод для удаления ребра по точке приндлежащей этому ребру
+     * @param x
+     * @param y
+     * @return
+     */
     public boolean removeEdge(int x, int y)
     {
         Edge edge = getEdge(x, y);
@@ -88,6 +153,11 @@ public class GraphController<T, E, G>
         return true;
     }
 
+    /**
+     * Метод для получения индексов вершин, которые соединияет ребро
+     * @param x
+     * @param y
+     */
     public void valueOfEdge(int x, int y)
     {
         Edge edge = getEdge(x, y);
@@ -95,11 +165,21 @@ public class GraphController<T, E, G>
             view.showEdge(edge.indexTop1, edge.indexTop2);
     }
 
+    /**
+     * Метод для перемещения вершины в определенные координаты
+     * @param top Индекс вершины
+     * @param x
+     * @param y
+     */
     public void replaceTop(int top, int x, int y)
     {
         graph.getTopGraphByIndex(top).setCoordinates(x, y);
     }
 
+    /**
+     * Метод для отрисовки всего графа
+     * @param g Объект с помощью которого можно отрисовать
+     */
     public void paint(G g)
     {
         for (Edge edge : graph.allEdges())
@@ -114,6 +194,11 @@ public class GraphController<T, E, G>
         }
     }
 
+    /**
+     * Метод для задания дефолтного расположения вершин по области
+     * @param w Ширина области
+     * @param h Высота области
+     */
     public void defaultPlace(int w, int h)
     {
         int size = graph.countOfTop();

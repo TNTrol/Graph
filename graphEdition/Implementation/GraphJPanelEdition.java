@@ -25,10 +25,10 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
 /**
- *
- * @author user
- * @param <T>
- * @param <E>
+ * Класс для визуализации граффа на основе JPanel
+ * @param <T> Тип вершин графа
+ * @param <E> Тип ребер графа
+ * @author tntrol
  */
 public class GraphJPanelEdition<T, E> extends JPanel{
     private JPopupMenu _popup;
