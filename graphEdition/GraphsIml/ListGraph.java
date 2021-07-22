@@ -9,6 +9,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+/**
+ * Класс для хранения неориентированного графа на основе листов, реализующий класс Graph
+ * @param <T> Тип вершины
+ * @param <E> Тип ребра
+ * @see Graph
+ * @author tntrol
+ */
 public class ListGraph<T, E> extends Graph<T, E>
 {
     protected List<NodeList<E>>[] edges = new LinkedList[10];
@@ -239,11 +246,6 @@ public class ListGraph<T, E> extends Graph<T, E>
 
                 }
 
-//                for (NodeList node : edges[i]) {
-//                    if (node.top > indexTop) {
-//                        node.top--;
-//                    }
-//                }
             }
         }
         return true;

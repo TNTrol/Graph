@@ -2,11 +2,16 @@ package graphEdition.GraphsIml;
 
 import graphEdition.AuxiliarySets.Edge;
 import graphEdition.AuxiliarySets.NodeList;
-import graphEdition.AuxiliarySets.NodeListWithWrapper;
-import graphEdition.AuxiliarySets.Wrapper;
+import graphEdition.GraphCore.Graph;
 
 import java.util.Iterator;
-
+/**
+ * Класс для хранения ориентированного графа на основе листов, реализующий класс Graph
+ * @param <T> Тип вершины
+ * @param <E> Тип ребра
+ * @see Graph
+ * @author tntrol
+ */
 public class ListDirectedGraph<T, E> extends ListGraph<T, E>
 {
 

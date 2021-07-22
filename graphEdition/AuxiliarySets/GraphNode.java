@@ -6,12 +6,19 @@
 package graphEdition.AuxiliarySets;
 
 /**
- *
- * @author krupenin_s_s
+ * Интерфейс для создания элемента разряженного графа
+ * @author tntrol
  */
 public interface GraphNode<E> {
-    
+    /**
+     * Метод для получения индекса вершины, с которым связанно ребро
+     * @return
+     */
     int getIndexOfTop();
 
+    /**
+     * Метод для получения значения ребра
+     * @return
+     */
     E getValue();
 }

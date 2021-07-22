@@ -11,6 +11,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+/**
+ * Класс для хранения неориентированного графа на основе двумерного массива, реализующий класс Graph
+ * @param <T> Тип вершины
+ * @param <E> Тип ребра
+ * @see Graph
+ * @author tntrol
+ */
 public class ArrayGraph<T, E> extends Graph<T, E>
 {
     protected NodeArray<E>[][] edges = new NodeArray[10][10];

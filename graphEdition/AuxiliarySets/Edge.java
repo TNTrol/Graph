@@ -1,5 +1,9 @@
 package graphEdition.AuxiliarySets;
 
+/**
+ * Класс для хранения индексов смежных вершин
+ * @author tntrol
+ */
 public class Edge
 {
     public int indexTop1, indexTop2;

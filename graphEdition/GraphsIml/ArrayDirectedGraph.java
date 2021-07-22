@@ -2,10 +2,17 @@ package graphEdition.GraphsIml;
 
 import graphEdition.AuxiliarySets.Edge;
 import graphEdition.AuxiliarySets.NodeArray;
+import graphEdition.GraphCore.Graph;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
+/**
+ * Класс для хранения ориентированного графа на основе двумерного массива, реализующий класс Graph
+ * @param <T> Тип вершины
+ * @param <E> Тип ребра
+ * @see Graph\
+ * @author tntrol
+ */
 public class ArrayDirectedGraph<T, E> extends ArrayGraph<T,E>
 {
     @Override
